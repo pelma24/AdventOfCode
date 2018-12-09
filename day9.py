@@ -10,6 +10,8 @@ def do():
     position = 1
     player = 2
     for turn in range(2, marble):
+        if turn % 100 == 0:
+            print(turn)
         if (turn % 23) == 0:
             if player not in result:
                 result[player] = 0
