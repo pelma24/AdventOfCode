@@ -149,6 +149,7 @@ input = """            /--------------------------------------------------------
                     \\-----------------------------------------+----------+-------------+-------------------------/                               |    
                                                               \\----------/             \\---------------------------------------------------------/    """
 
+
 from collections import namedtuple
 from enum import Enum
 
@@ -237,6 +238,9 @@ def samePositions(carts):
             samePosition.append(test)
     return samePosition
 
+def cartsort(cart):
+    return cart.posY + float(cart.posX) / 1000
+
 def do():
     m = prepareInput()
 
@@ -280,15 +284,18 @@ def do():
                 found = False
 
     while(True):
-        for cart in carts:
+        carts.sort(key=cartsort)
+        for cart in carts.copy():
             cart.move(m)
             samePositionCart = samePositions(carts)
             if samePositionCart != []:
-                return [carts[samePositionCart[0][0]].posX, carts[samePositionCart[0][0]].posY]
-
-                
-            
-
+                cart1 = carts[samePositionCart[0][0]]
+                cart2 = carts[samePositionCart[1][0]]
+                carts.remove(cart1)
+                carts.remove(cart2)
+        if len(carts) == 1:
+                return [carts[0].posX, carts[0].posY]
+  
 print(do())
 
 
