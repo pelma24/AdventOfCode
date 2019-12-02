@@ -1,17 +1,12 @@
 input = "477 players; last marble is worth 70851 points"
 
-players = 477
-marble = 7085100
-
-def do():
+def do(players, marble):
 
     result = {}
     l = [0, 1]
     position = 1
     player = 2
-    for turn in range(2, marble):
-        if turn % 100 == 0:
-            print(turn)
+    for turn in range(2, marble + 1):
         if (turn % 23) == 0:
             if player not in result:
                 result[player] = 0
@@ -26,11 +21,9 @@ def do():
             l.insert(index, turn)
             position = index
 
-        player += 1
-        if player > 477:
-            player = 1
+        player = (player + 1) % players
 
-    return result
+    return max(result.values())
 
-result = do()
-print(max(result.values()))
+result = do(477, 70851)
+print(result)

@@ -1,7 +1,13 @@
 {
     "python.pythonPath": "C:\\Users\\iskn\\AppData\\Local\\Programs\\Python\\Python37\\python.exe",
-    "python.unitTest.promptToConfigure": false,
     "python.unitTest.pyTestEnabled": false,
-    "python.unitTest.unittestEnabled": false,
-    "python.unitTest.nosetestsEnabled": false
+    "python.unitTest.unittestEnabled": true,
+    "python.unitTest.nosetestsEnabled": false,
+    "python.unitTest.unittestArgs": [
+        "-v",
+        "-s",
+        ".",
+        "-p",
+        "*_test.py"
+    ]
 }
