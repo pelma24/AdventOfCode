@@ -26,75 +26,81 @@ def do():
     return image
 
 def draw(wire, image, positionX, positionY, first):
+    length = 1
     for command in wire:
         direction = command[0]
         count = int(command[1:])
         if direction == 'R':
-            positionX, positionY = drawRight(count, image, positionX, positionY, first)
+            positionX, positionY, length = drawRight(count, image, positionX, positionY, length, first)
         elif direction == 'L':
-            positionX, positionY = drawLeft(count, image, positionX, positionY, first)
+            positionX, positionY, length = drawLeft(count, image, positionX, positionY, length, first)
         elif direction == 'D':
-            positionX, positionY = drawDown(count, image, positionX, positionY, first)
+            positionX, positionY, length = drawDown(count, image, positionX, positionY, length, first)
         elif direction == 'U':
-            positionX, positionY = drawUp(count, image, positionX, positionY, first)
+            positionX, positionY, length = drawUp(count, image, positionX, positionY, length, first)
         else:
             print('Wrong direction')
 
-def drawRight(count, image, positionX, positionY, first):
+def drawRight(count, image, positionX, positionY, length, first):
     for x in range(1, count + 1):
-        if image[positionY][positionX + x] == '-' and not first:
-            image[positionY][positionX + x] = 'X'
+        if image[positionY][positionX + x] != ' ' and not first:
+            image[positionY][positionX + x] = str(image[positionY][positionX + x] + length) + 'X'
         elif first:
-            image[positionY][positionX + x] = '-'
-        else:
-            image[positionY][positionX + x] = '|'
+            image[positionY][positionX + x] = length
+        length += 1
     positionX = positionX + count
 
-    return [positionX, positionY]
+    return [positionX, positionY, length]
 
-def drawLeft(count, image, positionX, positionY, first):
+def drawLeft(count, image, positionX, positionY, length, first):
     for x in range(1, count + 1):
-        if image[positionY][positionX - x] == '-' and not first:
-            image[positionY][positionX - x] = 'X'
+        if image[positionY][positionX - x] != ' ' and not first:
+            image[positionY][positionX - x] = str(image[positionY][positionX - x] + length) + 'X'
         elif first:
-            image[positionY][positionX - x] = '-'
-        else:
-            image[positionY][positionX - x] = '|'
+            image[positionY][positionX - x] = length
+        length += 1
     positionX = positionX - count
 
-    return [positionX, positionY]
-def drawUp(count, image, positionX, positionY, first):
+    return [positionX, positionY, length]
+def drawUp(count, image, positionX, positionY, length, first):
     for y in range(1, count + 1):
-        if image[positionY - y][positionX] == '-' and not first:
-            image[positionY - y][positionX] = 'X'
+        if image[positionY - y][positionX] != ' ' and not first:
+            image[positionY - y][positionX] = str(image[positionY - y][positionX] + length) + 'X'
         elif first:
-            image[positionY - y][positionX] = '-'
-        else:
-            image[positionY - y][positionX] = '|'
+            image[positionY - y][positionX] = length
+        length += 1
     positionY = positionY - count
 
-    return [positionX, positionY]
-def drawDown(count, image, positionX, positionY, first):
+    return [positionX, positionY, length]
+def drawDown(count, image, positionX, positionY, length, first):
     for y in range(1, count + 1):
-        if image[positionY + y][positionX] == '-' and not first:
-            image[positionY + y][positionX] = 'X'
+        if image[positionY + y][positionX] != ' ' and not first:
+            image[positionY + y][positionX] = str(image[positionY + y][positionX] + length) + 'X'
         elif first:
-            image[positionY + y][positionX] = '-'
-        else:
-            image[positionY + y][positionX] = '|'
+            image[positionY + y][positionX] = length
+        length += 1
     positionY = positionY + count
 
-    return [positionX, positionY]
+    return [positionX, positionY, length]
 
 image = do()
 
+#part 1
 manhattan = []
 
 for y in range(len(image)):
     for x in range(len(image[0])):
-        if image[y][x] == 'X':
+        if 'X' in str(image[y][x]):
             manhattanDistance = abs(x - size / 2) + abs(y - size / 2)
             manhattan.append(manhattanDistance)
-            print(manhattanDistance)
 
 print(min(manhattan))
+
+#part 2
+steps = []
+for y in range(len(image)):
+    for x in range(len(image[0])):
+        if 'X' in str(image[y][x]):
+            steps.append(int(image[y][x].replace('X','')))  
+            
+print(min(steps))
