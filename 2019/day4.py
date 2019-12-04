@@ -1,7 +1,7 @@
 rangeLow = 134792
 rangeHigh = 675810
 
-def do():
+def do1():
 
     result = []
 
@@ -10,6 +10,29 @@ def do():
             result.append(i) 
 
     return result
+
+def do2():
+
+    result = []
+
+    for i in range(rangeLow, rangeHigh + 1):
+        if hasOnlyOneDouble(i) and doesNotDecrease(i):
+            result.append(i) 
+
+    return result
+
+def hasOnlyOneDouble(i):
+    numbers = [int(x) for x in str(i)]
+
+    dic = {}
+
+    for number in numbers:
+        dic[number] = dic.get(number, 0) + 1
+
+    if 2 in dic.values():
+        return True
+    
+    return False
 
 def hasDouble(i):
     numbers = [int(x) for x in str(i)]
@@ -29,6 +52,7 @@ def doesNotDecrease(i):
     return True
 
 #part1
-print(len(do()))
+print(len(do1()))
 
 #part2
+print(len(do2()))
