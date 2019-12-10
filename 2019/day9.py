@@ -72,7 +72,7 @@ def do(input):
             position += 4
         else:
             print(action)
-            print("Failure")
+            print("Failure: unknown opcode")
             return
 
         
