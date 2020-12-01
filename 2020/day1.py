@@ -15,9 +15,9 @@ def do2(intInput):
 
 def do():
     with open ('Input/day1.txt') as f:
-        input = f.read()
+        strInput = f.read()
 
-    splitInput = inputsplit(input)
+    splitInput = inputsplit(strInput)
     intInput = convertToInt(splitInput)
 
     print(do1(intInput))
