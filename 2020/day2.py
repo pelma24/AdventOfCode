@@ -7,8 +7,7 @@ def do1(puzzleInput):
     for line in puzzleInput:
         match = re.match('([0-9]+)-([0-9]+) ([A-Za-z]): ([A-Za-z]+)', line)
 
-        minCount, maxCount = [int(x) for x in match.groups() if x.isnumeric()]
-        letter, password = [x for x in match.groups() if not x.isnumeric()]
+        minCount, maxCount, letter, password = [int(x) if x.isnumeric() else x for x in match.groups()]
 
         numberOfOccurences = password.count(letter)
 
@@ -23,8 +22,7 @@ def do2(puzzleInput):
     for line in puzzleInput:
         match = re.match('([0-9]+)-([0-9]+) ([A-Za-z]): ([A-Za-z]+)', line)
 
-        pos1, pos2 = [int(x) - 1 for x in match.groups() if x.isnumeric()]
-        letter, password = [x for x in match.groups() if not x.isnumeric()]
+        pos1, pos2, letter, password = [int(x) - 1 if x.isnumeric() else x for x in match.groups()]
 
         if (password[pos1] == letter and not password[pos2] == letter) or (password[pos2] == letter and not password[pos1] == letter):
             numValidPasswords += 1
