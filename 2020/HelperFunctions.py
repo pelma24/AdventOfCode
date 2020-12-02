@@ -1,5 +1,5 @@
-def inputsplit(input):
-    return input.split()
+def inputsplit(input, separator=' '):
+    return input.split(separator)
 
 def convertToInt(input):
     numbers = []
