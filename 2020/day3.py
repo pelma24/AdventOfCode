@@ -4,15 +4,14 @@ def do1(puzzleInput):
     
     return countTrees(puzzleInput, 1, 3)
 
-def do2(puzzleInput):
+def do2(puzzleInput, slopes):
     
-    trees1 = countTrees(puzzleInput, 1, 1)
-    trees2 = countTrees(puzzleInput, 1, 3)
-    trees3 = countTrees(puzzleInput, 1, 5)
-    trees4 = countTrees(puzzleInput, 1, 7)
-    trees5 = countTrees(puzzleInput, 2, 1)
+    trees = 1
 
-    return trees1 * trees2 * trees3 * trees4 * trees5
+    for slope in slopes:
+        trees *= countTrees(puzzleInput, slope[0], slope[1])
+
+    return trees
 
 def countTrees(puzzleInput, slopeRow, slopeColumn):
     trees = 0
@@ -38,7 +37,9 @@ def do():
 
     splitInput = inputsplit(strInput, '\n')
 
+    slopes = [(1,1), (1,3), (1,5), (1,7), (2,1)]
+
     print(do1(splitInput))
-    print(do2(splitInput))
+    print(do2(splitInput, slopes))
     
 do()
