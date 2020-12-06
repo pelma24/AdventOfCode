@@ -13,12 +13,12 @@ def getGroupCount(puzzleInput, mergeFunction):
 
     for group in puzzleInput:
         persons = group.split('\n')
-        sameAnswers = set(persons[0])
+        answers = set(persons[0])
         for otherPerson in persons[1:]:
             answer = set(otherPerson)
-            sameAnswers = mergeFunction(sameAnswers, answer)        
+            answers = mergeFunction(answers, answer)        
 
-        groupCount += len(sameAnswers)
+        groupCount += len(answers)
 
     return groupCount    
 
