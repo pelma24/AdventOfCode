@@ -2,20 +2,13 @@ from HelperFunctions import inputsplit
 
 def do1(puzzleInput):
 
-    groupCount = 0
-
-    for group in puzzleInput:
-        answers = set()
-        persons = group.split('\n')
-        for person in persons:
-            answer = set(person)
-            answers = answers.union(answer)
-        groupCount += len(answers)
-
-    return groupCount
+    return getGroupCount(puzzleInput, union)
 
 def do2(puzzleInput):
     
+    return getGroupCount(puzzleInput, intersection)
+
+def getGroupCount(puzzleInput, mergeFunction):
     groupCount = 0
 
     for group in puzzleInput:
@@ -23,11 +16,17 @@ def do2(puzzleInput):
         sameAnswers = set(persons[0])
         for otherPerson in persons[1:]:
             answer = set(otherPerson)
-            sameAnswers = sameAnswers.intersection(answer)        
+            sameAnswers = mergeFunction(sameAnswers, answer)        
 
         groupCount += len(sameAnswers)
 
-    return groupCount
+    return groupCount    
+
+def intersection(set1, set2):
+    return set1.intersection(set2)
+
+def union(set1, set2):
+    return set1.union(set2)
 
 def do():
     with open ('Input/day6.txt') as f:
