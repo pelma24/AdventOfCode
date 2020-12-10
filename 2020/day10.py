@@ -6,18 +6,14 @@ def do1(puzzleInput):
 
     return (differences.count(1)) * (differences.count(3))
 
-def getDifferences(puzzleInput):
-    currentJolts = 0
-    maxAdapter = max(puzzleInput)
-    differences = []
+def getDifferences(oldPuzzleInput):
+    puzzleInput = oldPuzzleInput.copy()
+    puzzleInput.insert(0,0)
+    puzzleInput.insert(-1, max(puzzleInput) + 3)
+    puzzleInput.sort()
     
-    while currentJolts != maxAdapter:
-        for i in range(1, 4):
-            if (currentJolts + i) in puzzleInput:
-                currentJolts = currentJolts + i
-                differences.append(i)
-                break
-    differences.append(3)
+    differences = [puzzleInput[x+1] - puzzleInput[x] for x in range(len(puzzleInput)-1)]
+    
     return differences
     
 
@@ -35,23 +31,11 @@ def do2(puzzleInput):
         else:
             sequence += 1
 
+    dic = {1: lambda x : x, 2: lambda x : x * 2, 3: lambda x: x * 4, 4: lambda x : x * 7}
     possibilities = 1
     for sequence in sequences:
-        if sequence == 2:
-            possibilities *= 2
-        if sequence == 3:
-            possibilities *= 4
-        if sequence == 4:
-            possibilities *= 7
-
+        possibilities = dic[sequence](possibilities)
     return possibilities
-
-def nextAvailableAdapters(adapters, jolts):
-    possibleAdapters = []
-    for i in range(1,4):
-        if (jolts + i) in adapters:
-            possibleAdapters.append(jolts + i)
-    return possibleAdapters
 
 def do():
     with open ('Input/day10.txt') as f:
