@@ -11,7 +11,7 @@ def do1(puzzleInput):
 
         numberOfOccurences = password.count(letter)
 
-        if numberOfOccurences >= minCount and numberOfOccurences <= maxCount:
+        if  minCount <= numberOfOccurences <= maxCount:
             numValidPasswords += 1
 
     return numValidPasswords
