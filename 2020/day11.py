@@ -108,38 +108,29 @@ def occupiedVisibleSeats(seatPosition, seatPlan):
         down.append(seatPlan[x][column])
     
     leftUpDiag = []
-    y = column
-    for x in range(row - 1, -1, -1):
-        y = y - 1
-        if y < 0:
-            break
-        leftUpDiag.append(seatPlan[x][y])
-    
     rightUpDiag = []
-    y = column
+    y1 = column
+    y2 = column
     for x in range(row - 1, -1, -1):
-        y = y + 1
-        if y == len(seatPlan[0]):
-            break
-        rightUpDiag.append(seatPlan[x][y])
+        y1 = y1 - 1
+        y2 = y2 + 1
+        if y1 >= 0:
+            leftUpDiag.append(seatPlan[x][y1])
+        if y2 < len(seatPlan[0]):
+            rightUpDiag.append(seatPlan[x][y2])
     
     leftDownDiag = []
-    y = column
-    for x in range(row + 1, len(seatPlan), 1):
-        y = y - 1
-        if y < 0:
-            break
-        leftDownDiag.append(seatPlan[x][y])
-    
     rightDownDiag = []
-    y = column
+    y1 = column
+    y2 = column
     for x in range(row + 1, len(seatPlan), 1):
-        y = y + 1
-        if y == len(seatPlan[0]):
-            break
-        rightDownDiag.append(seatPlan[x][y])
-
-    
+        y1 = y1 - 1
+        y2 = y2 + 1
+        if y1 >= 0:
+            leftDownDiag.append(seatPlan[x][y1])
+        if y2 < len(seatPlan[0]):
+            rightDownDiag.append(seatPlan[x][y2])
+        
     if occupiedSeatVisible(left):
         numberOfOccupiedSeats += 1
     if occupiedSeatVisible(right):
@@ -158,7 +149,6 @@ def occupiedVisibleSeats(seatPosition, seatPlan):
         numberOfOccupiedSeats += 1
     
     return numberOfOccupiedSeats
-
     
 def occupiedSeatVisible(seatLine):
     for seat in seatLine:
