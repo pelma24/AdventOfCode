@@ -53,7 +53,7 @@ def turnWaypoint(wayNorth, wayEast, turnOrder, count):
             wayEast = wayNorthtmp
         elif count == 180:
             wayNorth = -wayNorth
-            wayEast = - wayEast
+            wayEast = -wayEast
         elif count == 270:
             wayNorthtmp = wayNorth
             wayNorth = wayEast
@@ -65,7 +65,7 @@ def turnWaypoint(wayNorth, wayEast, turnOrder, count):
 
 def driveToWaypoint(east, north, wayNorth, wayEast, count):
 
-    for i in range(count):
+    for _ in range(count):
         east, north,_ = move(east, north, 'N', wayNorth)
         east, north,_ = move(east, north, 'E', wayEast)
 
@@ -100,15 +100,10 @@ def turn(direction, turnOrder, degrees):
     return direction
 
 def driveForward(east, north, direction, count):
-    action = 'X'
-    if direction == 0:
-        action = 'E'
-    elif direction == 1:
-        action = 'S'
-    elif direction == 2:
-        action = 'W'
-    elif direction == 3:
-        action = 'N'
+    actions = {0: 'E', 1: 'S', 2: 'W', 3: 'N'}
+    
+    action = actions.get(direction, 'X')
+    
     east, north, _ = move(east, north, action, count, direction)
     
     return [east, north] 
