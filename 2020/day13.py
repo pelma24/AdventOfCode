@@ -31,7 +31,7 @@ def do2(puzzleInput):
         for i in range(len(puzzleInput)):
             bus = puzzleInput[i]
             if bus == 'x':
-                continue
+                continue55
             busID = int(bus)
             if (departTime + i) % busID != 0:
                 works = False
@@ -47,7 +47,7 @@ def do():
 
     earliest = 1007125
 
-    #print(do1(earliest, splitInput))
-    print(do2(splitInput))
+    print(do1(earliest, splitInput))
+    #print(do2(splitInput))
     
 do()
