@@ -2,26 +2,18 @@ from HelperFunctions import inputsplit
 import re
 
 def do1(puzzleInput):
-    
-    memory = {}
 
-    bitmask = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-    for line in puzzleInput:
-        match = re.match('mask = (.+)', line)
-        if match:
-            bitmask = match.groups()[0]
-        else:
-            match = re.match('mem\[([0-9]+)\] = ([0-9]+)', line)
-            if match:
-                position = int(match.groups()[0])
-                value = int(match.groups()[1])
-                updateValue(bitmask, position, value, memory)
-            else:
-                print('could not match')
+    memory = fillMemory(puzzleInput, updateValue)
     
-    return sum([memory[x] for x in memory.keys() if memory[x] != 0])
+    return sum([memory[x] for x in memory.keys()])
 
 def do2(puzzleInput):
+    
+    memory = fillMemory(puzzleInput, updateMemoryValue)
+    
+    return sum([memory[x] for x in memory.keys()])
+
+def fillMemory(puzzleInput, updateFunction):
     memory = {}
 
     bitmask = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
@@ -34,44 +26,43 @@ def do2(puzzleInput):
             if match:
                 position = int(match.groups()[0])
                 value = int(match.groups()[1])
-                updateValueWithMemory(bitmask, position, value, memory)
+                updateFunction(bitmask, position, value, memory)
             else:
                 print('could not match')
-    
-    return sum([memory[x] for x in memory.keys() if memory[x] != 0])
+    return memory
 
-def updateValueWithMemory(bitmask, position, value, memory):
+def updateMemoryValue(bitmask, position, value, memory):
     memoryPositions = []
     
     positionBinary = format(position, '036b')
     memoryPositions.append(positionBinary)
 
-    for i in range(len(bitmask) - 1, -1, -1):
-        if bitmask[i] == '1':
-            for j in range(len(memoryPositions)):
-                memoryPositions[j] = memoryPositions[j][0:i] + '1' + memoryPositions[j][i+1:]
-        elif bitmask[i] == 'X':
-            for j in range(len(memoryPositions)):
-                memoryPositions[j] = memoryPositions[j][0:i] + '0' + memoryPositions[j][i+1:]
-                memoryPosition2 = memoryPositions[j][0:i] + '1' + memoryPositions[j][i+1:]
+    for bit in range(len(bitmask)):
+        if bitmask[bit] == '1':
+            for position in range(len(memoryPositions)):
+                memoryPositions[position] = memoryPositions[position][0:bit] + '1' + memoryPositions[position][bit+1:]
+        elif bitmask[bit] == 'X':
+            for position in range(len(memoryPositions)):
+                memoryPositions[position] = memoryPositions[position][0:bit] + '0' + memoryPositions[position][bit+1:]
+                memoryPosition2 = memoryPositions[position][0:bit] + '1' + memoryPositions[position][bit+1:]
                 memoryPositions.append(memoryPosition2)
 
     for memoryPosition in memoryPositions:
-        newMemoryPosition = int(memoryPosition, 2)
-        memory[newMemoryPosition] = value
+        intMemoryPosition = int(memoryPosition, 2)
+        memory[intMemoryPosition] = value
 
 def updateValue(bitmask, position, value, memory):
     valueBinary = format(value, '036b')
 
-    for i in range(len(bitmask) - 1, -1, -1):
-        if bitmask[i] == '1':
-            valueBinary = valueBinary[0:i] + '1' + valueBinary[i+1:]
-        elif bitmask[i] == '0':
-            valueBinary = valueBinary[0:i] + '0' + valueBinary[i+1:]
+    for bit in range(len(bitmask)):
+        if bitmask[bit] == '1':
+            valueBinary = valueBinary[0:bit] + '1' + valueBinary[bit+1:]
+        elif bitmask[bit] == '0':
+            valueBinary = valueBinary[0:bit] + '0' + valueBinary[bit+1:]
     
-    newValue = int(valueBinary, 2)
+    intValue = int(valueBinary, 2)
 
-    memory[position] = newValue        
+    memory[position] = intValue        
 
 def do():
     with open ('Input/day14.txt') as f:
