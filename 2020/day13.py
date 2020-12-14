@@ -23,7 +23,7 @@ def do2(puzzleInput):
     maxBusIndex = puzzleInput.index(maxBus)
     maxBus = int(maxBus)
 
-    departTime = 100000000000481-maxBusIndex
+    departTime = 487905974205117 - maxBus# 100000000000481-maxBusIndex
     works = False
     while not works:
         works = True
@@ -31,7 +31,7 @@ def do2(puzzleInput):
         for i in range(len(puzzleInput)):
             bus = puzzleInput[i]
             if bus == 'x':
-                continue55
+                continue
             busID = int(bus)
             if (departTime + i) % busID != 0:
                 works = False
@@ -48,6 +48,6 @@ def do():
     earliest = 1007125
 
     print(do1(earliest, splitInput))
-    #print(do2(splitInput))
+    print(do2(splitInput))
     
 do()
