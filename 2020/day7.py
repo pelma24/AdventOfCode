@@ -1,6 +1,8 @@
 from HelperFunctions import inputsplit
 import re
 
+bagCounts = {}
+
 def do1(puzzleInput):
     
     bags = getBags(puzzleInput, False)
@@ -30,17 +32,22 @@ def getBags(puzzleInput, numberIsImportant):
         bags[bag] = []
         for innerBag in match2:
             if numberIsImportant:
-                for i in range(int(innerBag[0])):
+                for _ in range(int(innerBag[0])):
                     bags[bag].append(innerBag[1])
             else:
                 bags[bag].append(innerBag[1])
     return bags
 
 def bagCount(bag, bags):    
+    if bag in bagCounts.keys():
+        return bagCounts[bag]
+
     count = len(bags[bag])
     for innerbag in bags[bag]:
         count += bagCount(innerbag, bags)
     
+    bagCounts[bag] = count
+
     return count
 
 def containsShinyBag(bags, bag):
