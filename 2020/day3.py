@@ -16,20 +16,15 @@ def do2(puzzleInput, slopes):
 def countTrees(puzzleInput, slopeRow, slopeColumn):
     trees = 0
 
-    rowEnd = len(puzzleInput) - 1
     columnLength = len(puzzleInput[0])
-
-    row = 0
     column = 0
 
-    while(row < rowEnd):
-        row += slopeRow
+    for row in range(slopeRow, len(puzzleInput), slopeRow):
         column = (column + slopeColumn) % columnLength
         if puzzleInput[row][column] == '#':
             trees += 1
 
     return trees
-
 
 def do():
     with open ('Input/day3.txt') as f:
