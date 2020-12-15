@@ -57,26 +57,16 @@ def checkHeight(passport):
 
 def checkHairColor(passport):
     match = re.fullmatch('\#[0-9|a-f]{6}', passport['hcl'])
-    if match:
-        return True
-
-    return False
+    return match
 
 def checkPassportID(passport):
     match = re.fullmatch('[0-9]{9}', passport['pid'])
-
-    if match:
-        return True
-    
-    return False
+    return match
 
 def checkEyeColor(passport):
-
     validEyeColors = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
 
-    if passport['ecl'] in validEyeColors:
-        return True
-    return False
+    return passport['ecl'] in validEyeColors
 
 def extractPassportData(puzzleInput):
 
