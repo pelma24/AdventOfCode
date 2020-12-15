@@ -5,18 +5,18 @@ import copy
 def do1(puzzleInput):
     seatPlan = prepareInput(puzzleInput)
 
-    newSeatPlan = updateSeatPlan(seatPlan, occupiedSeats, 3)
+    newSeatPlan = updateSeatPlan(seatPlan, False, 3)
                 
     return countOccupiedSeats(newSeatPlan)
 
 def do2(puzzleInput):
     seatPlan = prepareInput(puzzleInput)
 
-    newSeatPlan = updateSeatPlan(seatPlan, occupiedVisibleSeats, 4)
+    newSeatPlan = updateSeatPlan(seatPlan, True, 4)
                 
     return countOccupiedSeats(newSeatPlan)
 
-def updateSeatPlan(seatPlan, occupiedSeatsFunction, maxAdjacentSeats):
+def updateSeatPlan(seatPlan, wholeLine, maxAdjacentSeats):
     newSeatPlan = copy.deepcopy(seatPlan)
 
     seatsChanged = True
@@ -25,7 +25,7 @@ def updateSeatPlan(seatPlan, occupiedSeatsFunction, maxAdjacentSeats):
         seatsChanged = False
         for row in range(1, len(seatPlan) - 1):
             for column in range(1, len(seatPlan[0]) - 1):
-                changed = newSeatState((row, column), newSeatPlan, seatPlan, occupiedSeatsFunction, maxAdjacentSeats)
+                changed = newSeatState((row, column), newSeatPlan, seatPlan, wholeLine, maxAdjacentSeats)
                 seatsChanged = seatsChanged or changed
     
     return newSeatPlan
@@ -51,10 +51,10 @@ def countOccupiedSeats(seatPlan):
 
     return count
 
-def newSeatState(seatPosition, newSeatPlan, seatPlan, occupiedSeatsFunction, maxAdjacentSeats):
+def newSeatState(seatPosition, newSeatPlan, seatPlan, wholeLine, maxAdjacentSeats):
     row, column = seatPosition
     seatState = seatPlan[row][column]
-    occupiedAdjacentSeats = occupiedSeatsFunction(seatPosition, seatPlan)
+    occupiedAdjacentSeats = occupiedSeats(seatPosition, seatPlan, wholeLine)
     if  seatState == 'L' and occupiedAdjacentSeats == 0:
         newSeatPlan[row][column] = '#'
         return True
@@ -64,85 +64,42 @@ def newSeatState(seatPosition, newSeatPlan, seatPlan, occupiedSeatsFunction, max
 
     return False
 
-def occupiedSeats(seatPosition, seatPlan):
+def occupiedSeats(seatPosition, seatPlan, wholeLine):
     numberOfOccupiedSeats = 0
-
-    row, column = seatPosition
-
-    for x in range(row - 1, row + 2):
-        for y in range(column - 1, column + 2):
-            if x == row and y == column:
+    
+    for stepX in [-1, 0, 1]:
+        for stepY in [-1, 0, 1]:
+            if stepX == 0 and stepY == 0:
                 continue
-            if seatPlan[x][y] == '#':
+            if lookForOccupiedSeats(seatPlan, seatPosition, stepX, stepY, wholeLine):
                 numberOfOccupiedSeats += 1
+    
     return numberOfOccupiedSeats
 
-def occupiedVisibleSeats(seatPosition, seatPlan):
-    numberOfOccupiedSeats = 0
-    
+def lookForOccupiedSeats(seatPlan, seatPosition, stepX, stepY, wholeLine):
     row, column = seatPosition
+    posX = row + stepX
+    posY = column + stepY
+    
+    if wholeLine:
+        xEndLow = 0
+        yEndLow = 0
+        xEndHigh = len(seatPlan)
+        yEndHigh = len(seatPlan[0])
+    else:
+        xEndLow =  row - 1
+        xEndHigh = row + 2
+        yEndLow = column - 1
+        yEndHigh = column + 2
 
-    left = seatPlan[row][0:column]
-    left.reverse()
-    right = seatPlan[row][column + 1:]    
-    up = []
-    for x in range(row - 1, -1, -1):
-        up.append(seatPlan[x][column])
-    down = []
-    for x in range(row + 1, len(seatPlan)):
-        down.append(seatPlan[x][column])
-    
-    leftUpDiag = []
-    rightUpDiag = []
-    y1 = column
-    y2 = column
-    for x in range(row - 1, -1, -1):
-        y1 = y1 - 1
-        y2 = y2 + 1
-        if y1 >= 0:
-            leftUpDiag.append(seatPlan[x][y1])
-        if y2 < len(seatPlan[0]):
-            rightUpDiag.append(seatPlan[x][y2])
-    
-    leftDownDiag = []
-    rightDownDiag = []
-    y1 = column
-    y2 = column
-    for x in range(row + 1, len(seatPlan), 1):
-        y1 = y1 - 1
-        y2 = y2 + 1
-        if y1 >= 0:
-            leftDownDiag.append(seatPlan[x][y1])
-        if y2 < len(seatPlan[0]):
-            rightDownDiag.append(seatPlan[x][y2])
-        
-    if occupiedSeatVisible(left):
-        numberOfOccupiedSeats += 1
-    if occupiedSeatVisible(right):
-        numberOfOccupiedSeats += 1
-    if occupiedSeatVisible(up):
-        numberOfOccupiedSeats += 1
-    if occupiedSeatVisible(down):
-        numberOfOccupiedSeats += 1
-    if occupiedSeatVisible(leftUpDiag):
-        numberOfOccupiedSeats += 1
-    if occupiedSeatVisible(rightUpDiag):
-        numberOfOccupiedSeats += 1
-    if occupiedSeatVisible(leftDownDiag):
-        numberOfOccupiedSeats += 1
-    if occupiedSeatVisible(rightDownDiag):
-        numberOfOccupiedSeats += 1
-    
-    return numberOfOccupiedSeats
-    
-def occupiedSeatVisible(seatLine):
-    for seat in seatLine:
-        if seat == '#':
-            return True
-        elif seat == 'L':
+    while xEndLow <= posX < xEndHigh and yEndLow <= posY < yEndHigh:
+        if seatPlan[posX][posY] == 'L':
             return False
+        if seatPlan[posX][posY] == '#':
+            return True
+        posX = posX + stepX
+        posY = posY + stepY
     return False
-
 
 def do():
     with open ('Input/day11.txt') as f:
