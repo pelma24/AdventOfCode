@@ -5,18 +5,18 @@ import copy
 def do1(puzzleInput):
     seatPlan = prepareInput(puzzleInput)
 
-    newSeatPlan = updateSeatPlan(seatPlan, newSeatState1)
+    newSeatPlan = updateSeatPlan(seatPlan, occupiedSeats, 3)
                 
     return countOccupiedSeats(newSeatPlan)
 
 def do2(puzzleInput):
     seatPlan = prepareInput(puzzleInput)
 
-    newSeatPlan = updateSeatPlan(seatPlan, newSeatState2)
+    newSeatPlan = updateSeatPlan(seatPlan, occupiedVisibleSeats, 4)
                 
     return countOccupiedSeats(newSeatPlan)
 
-def updateSeatPlan(seatPlan, stateFunction):
+def updateSeatPlan(seatPlan, occupiedSeatsFunction, maxAdjacentSeats):
     newSeatPlan = copy.deepcopy(seatPlan)
 
     seatsChanged = True
@@ -25,55 +25,40 @@ def updateSeatPlan(seatPlan, stateFunction):
         seatsChanged = False
         for row in range(1, len(seatPlan) - 1):
             for column in range(1, len(seatPlan[0]) - 1):
-                changed = stateFunction((row, column), newSeatPlan, seatPlan)
+                changed = newSeatState((row, column), newSeatPlan, seatPlan, occupiedSeatsFunction, maxAdjacentSeats)
                 seatsChanged = seatsChanged or changed
     
     return newSeatPlan
 
 def prepareInput(puzzleInput):
-    seatPlan = [['.' for x in puzzleInput[0]] for y in puzzleInput]
+    seatPlan = [[] for x in puzzleInput]
     for i in range(len(puzzleInput)):
         for j in range(len(puzzleInput[0])):
-            seatPlan[i][j] = puzzleInput[i][j]
-
-    floor = ['.' for x in puzzleInput[0]]
+            seatPlan[i].append(puzzleInput[i][j])
+        seatPlan[i] = ['.'] + seatPlan[i] + ['.']
+        
+    floor = ['.'] + ['.' for x in puzzleInput[0]] + ['.']
 
     seatPlan.insert(0, floor)
-    seatPlan.append(floor)
-
-    for i in range(len(seatPlan)):
-        seatPlan[i] = ['.'] + seatPlan[i] + ['.']
+    seatPlan.append(floor)   
     
     return seatPlan
 
 def countOccupiedSeats(seatPlan):
     count = 0
-    for i in range(len(seatPlan)):
-        count += seatPlan[i].count('#')
+    for row in seatPlan:
+        count += row.count('#')
 
     return count
 
-def newSeatState1(seatPosition, newSeatPlan, seatPlan):
+def newSeatState(seatPosition, newSeatPlan, seatPlan, occupiedSeatsFunction, maxAdjacentSeats):
     row, column = seatPosition
     seatState = seatPlan[row][column]
-    occupiedAdjacentSeats = occupiedSeats(seatPosition, seatPlan)
+    occupiedAdjacentSeats = occupiedSeatsFunction(seatPosition, seatPlan)
     if  seatState == 'L' and occupiedAdjacentSeats == 0:
         newSeatPlan[row][column] = '#'
         return True
-    elif seatState == '#' and occupiedAdjacentSeats > 3:
-        newSeatPlan[row][column] = 'L'
-        return True
-
-    return False
-
-def newSeatState2(seatPosition, newSeatPlan, seatPlan):
-    row, column = seatPosition
-    seatState = seatPlan[row][column]
-    occupiedAdjacentSeats = occupiedVisibleSeats(seatPosition, seatPlan)
-    if  seatState == 'L' and occupiedAdjacentSeats == 0:
-        newSeatPlan[row][column] = '#'
-        return True
-    elif seatState == '#' and occupiedAdjacentSeats > 4:
+    elif seatState == '#' and occupiedAdjacentSeats > maxAdjacentSeats:
         newSeatPlan[row][column] = 'L'
         return True
 
