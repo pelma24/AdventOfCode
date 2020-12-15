@@ -30,7 +30,7 @@ def play(numbers, lastNumber, maxIterations):
     i = 1 + numbers[lastNumber][1][-1]
     while (i < maxIterations + 1):
         oldLastNumber = lastNumber
-        
+   
         if numbers[oldLastNumber][0] == 1:
             lastNumber = 0
         else:
@@ -41,6 +41,8 @@ def play(numbers, lastNumber, maxIterations):
 
         numbers[lastNumber][0] += 1
         numbers[lastNumber][1].append(i)
+        numbers[lastNumber][1] = numbers[lastNumber][1][-2:]
+        
         i += 1
     return lastNumber    
 
