@@ -81,21 +81,16 @@ def getValidTickets(tickets, validFields):
 
 def getActualFields(validTickets, validFields):
     possibleFields = {}
+    for position in range(0, len(validTickets[0])):
+        possibleFields[position] = []
+        for key,value in validFields.items():
+            possibleFields[position].append(key)
+            
     for ticket in validTickets:
         for position,field in enumerate(ticket):
-            if position not in possibleFields.keys():
-                possibleFields[position] = []
-            for key,value in validFields.items():
-                if field in value:
-                    if key not in possibleFields[position]:
-                        possibleFields[position].append(key)
-    
-    for ticket in validTickets:
-        for position,field in enumerate(ticket):
-            for key,value in validFields.items():
-                if not (field in value):
-                    if key in possibleFields[position]:
-                        possibleFields[position].remove(key)
+            for key in possibleFields[position]:
+                if not (field in validFields[key]):
+                    possibleFields[position].remove(key)
 
     solution = {}    
     while (len(solution.keys()) != len(validFields.keys())):
