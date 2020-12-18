@@ -11,8 +11,7 @@ def do1(puzzleInput):
 def do2(puzzleInput):
     sum = 0
     for line in puzzleInput:
-        lineResult = calculate(line, sumWithLineBeforeDot)
-        sum += lineResult
+        sum += calculate(line, sumWithLineBeforeDot)
 
     return sum
 
@@ -23,13 +22,10 @@ def calculate(line, sumFunction):
         result = sumFunction(match[1:-1])
         line = line.replace(match, str(result), 1)
         matches = re.findall('\([0-9 \+\*]+\)', line)
-    
-    result = sumFunction(line)
-            
-    return result
+    return sumFunction(line)
 
 def sumWithLineBeforeDot(line):
-    matches = re.findall('[0-9]+ \+ [0-9]+', line)
+    matches = re.findall('[\( ]?([0-9]+ \+ [0-9]+)[ \)]?', line)
     while matches:
         match = matches[0]
         result = sumUp(match)
@@ -44,13 +40,10 @@ def sumUp(line):
         if symbol.isnumeric():
             symbol = int(symbol)
             result = operation(result, symbol)
-            continue
         elif symbol == '+':
             operation = add
-            continue
         elif symbol == '*':
             operation = multiply
-            continue
     return result
 
 def multiply(result, symbol):
