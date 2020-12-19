@@ -88,6 +88,10 @@ def checkMessages(messages, rules, ruleNumber):
 
 def checkMessages2(messages, rules, ruleNumber):
     blobSize = len(rules[42][0])
+<<<<<<< HEAD
+=======
+    maxLen = max([len(x) for x in messages])
+>>>>>>> 61fc75ab1c46e0f0e93357817e79395626c6f1e4
 
     count = 0
     for message in messages:
