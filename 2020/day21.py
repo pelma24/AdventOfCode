@@ -46,7 +46,7 @@ def getIngredients(puzzleInput):
                 if allergen not in allergensInIngredients.keys():
                     allergensInIngredients[allergen] = ingredients
                 else:
-                    allergensInIngredients[allergen] = allergensInIngredients[allergen].intersection(ingredients)
+                    allergensInIngredients[allergen] = allergensInIngredients[allergen] & ingredients
 
     return completeListOfIngredients, allergensInIngredients
 
