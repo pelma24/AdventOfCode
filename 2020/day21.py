@@ -44,8 +44,7 @@ def getIngredients(puzzleInput):
             
             for allergen in allergens:
                 if allergen not in allergensInIngredients.keys():
-                    allergensInIngredients[allergen] = set()
-                    allergensInIngredients[allergen] = allergensInIngredients[allergen].union(ingredients)
+                    allergensInIngredients[allergen] = ingredients
                 else:
                     allergensInIngredients[allergen] = allergensInIngredients[allergen].intersection(ingredients)
 
