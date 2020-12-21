@@ -97,17 +97,17 @@ class Tile:
             self.couldBeNeighbors(neighbor)
 
     def couldBeNeighbors(self, otherTile):
-        for angle in [0, 90, 180, 270]:
-            otherTile.rotate(angle)
-            if self.checkForEqualSides(otherTile):
-                self.neighbors.add(otherTile)
-                return True
-        otherTile.flip()
-        for angle in [0, 90, 180, 270]:
-            otherTile.rotate(angle)
-            if self.checkForEqualSides(otherTile):
-                self.neighbors.add(otherTile)
-                return True       
+        flipped = False
+        while True:
+            for angle in [0, 90, 180, 270]:
+                otherTile.rotate(angle)
+                if self.checkForEqualSides(otherTile):
+                    self.neighbors.add(otherTile)
+                    return True
+            otherTile.flip()
+            if flipped:
+                break
+            flipped = True
 
         return False
             
