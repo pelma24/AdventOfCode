@@ -71,12 +71,8 @@ def playRecursive(player1, player2, memory):
             return 1   
 
 def getWinningScore(player):
-    score = 0
-    value = len(player)
-
-    for card in player:
-        score += value * card
-        value -= 1
+    value = range(len(player), 0, -1)
+    score = sum([a*b for a,b in zip(player, value)])
     
     return score
 
