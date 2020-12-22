@@ -51,20 +51,19 @@ def playRecursive(player1, player2, memory):
         card2 = player2.pop(0)
 
         if len(player1) >= card1 and len(player2) >= card2:
-            winner = playRecursive(player1[0:card1].copy(), player2[0:card2].copy(), [])
-            if winner == 1:
-                player1.append(card1)
-                player1.append(card2)
-            else:
-                player2.append(card2)
-                player2.append(card1)        
+            winner = playRecursive(player1[0:card1].copy(), player2[0:card2].copy(), [])   
         else:
             if card1 < card2:
-                player2.append(card2)
-                player2.append(card1)
+                winner = 2
             else:
-                player1.append(card1)
-                player1.append(card2)
+                winner = 1
+        
+        if winner == 1:
+            player1.append(card1)
+            player1.append(card2)
+        else:
+            player2.append(card2)
+            player2.append(card1)     
 
         if len(player1) == 0:
             return 2
