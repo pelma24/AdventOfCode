@@ -8,13 +8,9 @@ def do1(puzzleInput):
     return cupOrder(queue)
 
 def do2(puzzleInput):
-    queue = deque([int(x) for x in puzzleInput])
-    length = len(queue)
-
-    for i in range(length + 1, 1000001):
-        queue.append(i)
-
-    play(queue, 10000000)
+    queue = deque([int(x) for x in puzzleInput] + list(range(10, 1000000+1)))
+    
+    play2(queue, 10000000)
 
     return findStars(queue)
 
@@ -42,15 +38,38 @@ def play(queue, turns):
     maxValue = max(queue)
     minValue = min(queue)
 
-    for repetition in range(turns):
+    for _ in range(1, turns + 1):
+        currentElement = queue.popleft()
+        removed = [queue.popleft(), queue.popleft(), queue.popleft()]
 
-        queue.rotate(-1)
-        removed = []
-        for _ in range(3):            
-            removed.append(queue.popleft())
-        queue.rotate(1)
+        newElement = currentElement - 1
 
-        newElement = queue[0] - 1
+        if newElement < minValue:
+            newElement = maxValue
+
+        while newElement in removed:
+            newElement -= 1
+            if newElement < minValue:
+                newElement = maxValue
+        newIndex = queue.index(newElement)
+
+        queue.rotate(- (newIndex + 1))
+        queue.extendleft(removed[::-1])
+        queue.rotate(newIndex + 1)
+
+        queue.append(currentElement)
+
+def play2(queue, turns):
+    maxValue = max(queue)
+    minValue = min(queue)
+
+    comesAfter = {}
+
+    for _ in range(1, turns + 1):
+        currentElement = getNextElement(queue, comesAfter)
+        removed = [getNextElement(queue, comesAfter), getNextElement(queue, comesAfter), getNextElement(queue, comesAfter)]
+
+        newElement = currentElement - 1
 
         if newElement < minValue:
             newElement = maxValue
@@ -60,13 +79,18 @@ def play(queue, turns):
             if newElement < minValue:
                 newElement = maxValue
         
-        newIndex = queue.index(newElement)
+        comesAfter[newElement] = removed
 
-        for value in removed:
-            newIndex += 1
-            queue.insert(newIndex, value)
-        
-        queue.rotate(-1)
+        queue.append(currentElement)
+
+def getNextElement(queue, comesAfter):
+    nextElement = queue.popleft()
+
+    if nextElement in comesAfter.keys():
+        queue.extendleft(comesAfter[nextElement][::-1])
+        del comesAfter[nextElement]
+
+    return nextElement
 
 def do():
     with open ('Input/day23.txt') as f:
