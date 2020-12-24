@@ -1,6 +1,8 @@
 from HelperFunctions import inputsplit
 from copy import deepcopy
 
+directions = {'e': (1,-1,0), 'w': (-1,1,0), 'se': (0,-1,1), 'sw': (-1,0,1), 'ne': (1,0,-1), 'nw': (0,1,-1)}
+
 def do1(puzzleInput):
     tiles = set()
     
@@ -18,48 +20,20 @@ def do2(puzzleInput):
     return len(newTiles)
 
 def rotate(puzzleInput, tiles):
-    skip = False
     for line in puzzleInput:
-        x = 0
-        y = 0
-        z = 0
-        for index in range(len(line)):
-            if skip:
-                skip = False
-                continue
-            direction = line[index]
-            if direction == 'e':
-                x += 1
-                y -= 1
-            elif direction == 'w':
-                x -= 1
-                y += 1
-            elif direction == 's':
-                skip = True
-                secondPart = line[index+1]
-                if secondPart == 'e':
-                    z +=1
-                    y -= 1
-                elif secondPart == 'w':
-                    x -= 1
-                    z += 1
-                else:
-                    print('error')
-            elif direction == 'n':
-                skip = True
-                secondPart = line[index+1]
-                if secondPart == 'e':
-                    z -= 1
-                    x += 1
-                elif secondPart == 'w':
-                    z -= 1
-                    y += 1
-                else:
-                    print('error')
-        if (x,y,z) in tiles:
-            tiles.remove((x,y,z))
+        tile = (0,0,0)
+        direction = ''
+        for thing in line:
+            direction += thing
+            if direction in directions:
+                xStep,yStep,zStep = directions[direction]
+                x,y,z = tile
+                tile = (x + xStep, y + yStep, z + zStep)
+                direction = ''
+        if tile in tiles:
+            tiles.remove(tile)
         else:
-            tiles.add((x,y,z))
+            tiles.add(tile)
 
 def gameOfLife(tiles, rounds):
     newTiles = deepcopy(tiles)
@@ -81,24 +55,14 @@ def gameOfLife(tiles, rounds):
     return newTiles
 
 def getNeighbors(tile, tiles):
-    neighbors = set()
-    
     x,y,z = tile
     
-    neighbors.add((x + 1, y - 1, z))
-    neighbors.add((x - 1, y + 1, z))
-    neighbors.add((x, y - 1, z + 1))
-    neighbors.add((x - 1, y, z + 1))
-    neighbors.add((x + 1, y, z - 1))
-    neighbors.add((x, y + 1, z - 1))
+    neighbors = set([(x + xStep, y + yStep, z + zStep) for xStep,yStep,zStep in directions.values()])
 
     return neighbors
 
 def countBlackNeighbors(neighbors, tiles):
-    count = 0
-    for neighbor in neighbors:
-        if neighbor in tiles:
-            count += 1
+    count = len([neighbor for neighbor in neighbors if neighbor in tiles])
     return count
 
 def do():
