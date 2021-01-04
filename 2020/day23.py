@@ -8,11 +8,11 @@ def do1(puzzleInput):
     return cupOrder(queue)
 
 def do2(puzzleInput):
-    queue = deque([int(x) for x in puzzleInput] + list(range(10, 1000000+1)))
+    queue = [int(x) for x in puzzleInput] + list(range(10, 1000000+1))
     
-    play2(queue, 10000000)
+    linkedList = play2(queue, 10000000)
 
-    return findStars(queue)
+    return findStars(linkedList)
 
 def cupOrder(queue):
     result = ''
@@ -25,14 +25,11 @@ def cupOrder(queue):
 
     return result
 
-def findStars(queue):
-    first = queue.index(1)
-    queue.rotate(-(first + 1))
+def findStars(linkedList):
+    first = linkedList[1]
+    second = linkedList[first]
 
-    a = queue.popleft()
-    b = queue.popleft()
-
-    return a * b
+    return first * second
 
 def play(queue, turns):
     maxValue = max(queue)
@@ -62,35 +59,37 @@ def play(queue, turns):
 def play2(queue, turns):
     maxValue = max(queue)
     minValue = min(queue)
+    
+    linkedList = {}
 
-    comesAfter = {}
+    for index,item in enumerate(queue[0:-1]):
+        linkedList[item] = queue[index + 1]
+    linkedList[queue[-1]] = queue[0]
+
+    currentIndex = queue[-1]
 
     for _ in range(1, turns + 1):
-        currentElement = getNextElement(queue, comesAfter)
-        removed = [getNextElement(queue, comesAfter), getNextElement(queue, comesAfter), getNextElement(queue, comesAfter)]
-
+        currentElement = linkedList[currentIndex]
+        removed = [linkedList[currentElement], linkedList[linkedList[currentElement]], linkedList[linkedList[linkedList[currentElement]]]]
+        nextafternextafternext = removed[-1]
         newElement = currentElement - 1
 
         if newElement < minValue:
             newElement = maxValue
-
         while newElement in removed:
             newElement -= 1
             if newElement < minValue:
                 newElement = maxValue
+
+        tmp1 = linkedList[newElement]
+        tmp2 = linkedList[nextafternextafternext]
+        linkedList[newElement] = linkedList[currentElement]
+        linkedList[nextafternextafternext] = tmp1
+        linkedList[currentElement] = tmp2
+
+        currentIndex = currentElement
         
-        comesAfter[newElement] = removed
-
-        queue.append(currentElement)
-
-def getNextElement(queue, comesAfter):
-    nextElement = queue.popleft()
-
-    if nextElement in comesAfter.keys():
-        queue.extendleft(comesAfter[nextElement][::-1])
-        del comesAfter[nextElement]
-
-    return nextElement
+    return linkedList
 
 def do():
     with open ('Input/day23.txt') as f:
