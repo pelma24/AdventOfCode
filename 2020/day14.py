@@ -5,13 +5,13 @@ def do1(puzzleInput):
 
     memory = fillMemory(puzzleInput, updateValue)
     
-    return sum([memory[x] for x in memory.keys()])
+    return sum([x for x in memory.values()])
 
 def do2(puzzleInput):
     
     memory = fillMemory(puzzleInput, updateMemoryValue)
     
-    return sum([memory[x] for x in memory.keys()])
+    return sum([x for x in memory.values()])
 
 def fillMemory(puzzleInput, updateFunction):
     memory = {}
