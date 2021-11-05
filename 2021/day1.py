@@ -1,3 +1,4 @@
+from HelperFunctions import readInputFile
 from HelperFunctions import convertToInt
 
 def do1(splitInput):
@@ -7,8 +8,7 @@ def do2(splitInput):
     print('done')
 
 def do():
-    with open ('Input/day1.txt') as f:
-        strInput = f.read()
+    strInput = readInputFile(1)
 
     do1(strInput)
     do2(strInput)
