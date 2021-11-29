@@ -14,7 +14,10 @@ def createFiles(filepath, filepathInput, day):
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         day = sys.argv[1]
-        filepath = os.path.join(f'day{day}.py')
-        filepathInput = os.path.join('Input', f'day{day}.txt')
-        createFiles(filepath, filepathInput, day)
+    else:
+        files = [Path(f).stem for f in os.listdir() if Path(f).is_file()]
+        day = max([int(f.replace('day', '')) for f in files if f.startswith('day')], default=0) + 1
         
+    filepath = os.path.join(f'day{day}.py')
+    filepathInput = os.path.join('Input', f'day{day}.txt')
+    createFiles(filepath, filepathInput, day)      
