@@ -1,6 +1,6 @@
 
 def readInputFile(day):
-    with open (f"Input/day{day}.txt") as f:
+    with open (f'Input/day{day}.txt') as f:
         strInput = f.read()
     return strInput
 
