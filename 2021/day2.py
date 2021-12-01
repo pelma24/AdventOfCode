@@ -1,0 +1,19 @@
+from HelperFunctions import readInputFile
+from HelperFunctions import convertToInt
+
+def do1(splitInput):
+	return 'done'
+
+def do2(splitInput):
+	return 'done'
+
+def do():
+	strInput = readInputFile(2)
+
+	print(do1(strInput))
+	print(do2(strInput))
+
+	print('done')
+
+
+do()
