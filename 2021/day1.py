@@ -1,4 +1,5 @@
 from HelperFunctions import readInputFile
+from HelperFunctions import readExampleInput
 from HelperFunctions import convertToInt
 
 def do1(splitInput):
