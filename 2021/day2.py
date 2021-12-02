@@ -8,14 +8,15 @@ def do1(splitInput):
 
 	for line in splitInput:
 		direction,value = line.split(' ')
+		value = int(value)
 
 		match direction:
 			case 'forward':
-				horizontal += int(value)
+				horizontal += value
 			case 'up':
-				depth -= int(value)
+				depth -= value
 			case 'down':
-				depth += int(value)
+				depth += value
 	
 	return horizontal * depth
 
@@ -26,15 +27,16 @@ def do2(splitInput):
 	
 	for line in splitInput:
 		direction,value = line.split(' ')
+		value = int(value)
 
 		match direction:
 			case 'forward':
-				horizontal += int(value)
-				depth += aim * int(value)
+				horizontal += value
+				depth += aim * value
 			case 'up':
-				aim -= int(value)
+				aim -= value
 			case 'down':
-				aim += int(value)
+				aim += value
 	
 	return horizontal * depth
 
