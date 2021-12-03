@@ -1,7 +1,9 @@
 from HelperFunctions import readInputFile
 from HelperFunctions import readExampleInput
 from HelperFunctions import convertToInt
+from collections import defaultdict
 from copy import deepcopy
+import operator
 
 def do1(splitInput):
     frequency = getFrequency(splitInput)
@@ -19,50 +21,38 @@ def do1(splitInput):
     return int(gamma, 2) * int(epsilon, 2)
 
 def do2(splitInput):
-    maxBit = len(splitInput[0])
+    oxygen = filterByFrequency(splitInput, operator.gt)
 
-    # oxygen
-    currentInput = deepcopy(splitInput)
+    scrubber = filterByFrequency(splitInput, operator.le)
+
+    return scrubber * oxygen
+
+def getFrequency(splitInput):
+    frequency = defaultdict(lambda: {0: 0, 1: 0})
+    
+    for line in splitInput:
+        for position,bit in enumerate(line):
+            frequency[position][int(bit)] += 1
+    
+    return frequency
+
+def filterByFrequency(currentInput, compareOperator=operator.gt):
+    maxBit = len(currentInput[0])
+
     for i in range(maxBit):
         frequency = getFrequency(currentInput)
-        if frequency[i][0] > frequency[i][1]:
+        if compareOperator(frequency[i][0], frequency[i][1]):
             currentInput = [x for x in currentInput if x[i] == '0']
         else:
             currentInput = [x for x in currentInput if x[i] == '1']    
         if len(currentInput) == 1:
             break
-    oxygen = int(currentInput[0],2)
     
-    # CO2 scrubber
-    currentInput = deepcopy(splitInput)
-    for i in range(maxBit):
-        frequency = getFrequency(currentInput)
-        if frequency[i][1] < frequency[i][0]:
-            currentInput = [x for x in currentInput if x[i] == '1']
-        else:
-            currentInput = [x for x in currentInput if x[i] == '0']    
-        if len(currentInput) == 1:
-            break
-    scrubber = int(currentInput[0],2)
-    
-    return scrubber * oxygen
-
-def getFrequency(splitInput):
-    frequency = {}
-    
-    for line in splitInput:
-        for position,bit in enumerate(line):
-            if position not in frequency.keys():
-                frequency[position] = {0: 0, 1: 0}
-            frequency[position][int(bit)] += 1
-    
-    return frequency
-
+    return int(currentInput[0],2)
 
 def do():
     strInput = readInputFile(3)
-    #strInput = readExampleInput(3)
-
+    
     splitInput = strInput.split('\n')
 
     print(do1(splitInput))
