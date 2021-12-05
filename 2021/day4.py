@@ -7,7 +7,7 @@ def do1(splitInput):
 	boards = splitInput[1:]
 	intBoards = prepareBoards(boards)
 
-	return play1(numbers, intBoards)		
+	return play(numbers, intBoards, True)		
 	
 
 def do2(splitInput):
@@ -16,7 +16,7 @@ def do2(splitInput):
 	boards = splitInput[1:]
 	intBoards = prepareBoards(boards)
 	
-	return play2(numbers, intBoards)
+	return play(numbers, intBoards, False)
 
 def prepareBoards(boards):
 	intBoards = []
@@ -37,27 +37,17 @@ def convertToInt(input):
 			numbers.append(int(stringNumber))
 	return numbers
 
-def play1(numbers, boards):
+def play(numbers, boards, firstWins):
 	for number in numbers:
 		for board in boards:
 			playNumberOnBoard(board, number)
-		winners = winningBoards(boards)
-		if  len(winners) != 0:
-			return number * winningScore(boards[winners[0]])
-
-def play2(numbers, boards):
-	for number in numbers:
-		for board in boards:
-			playNumberOnBoard(board, number)
-		if len(boards) == 1:
-			return number * winningScore(boards[winners[-1]])
 		winners = winningBoards(boards)
 		if winners:
+			if firstWins or len(boards) == 1:
+				return number * winningScore(boards[winners[0]])
 			for winner in sorted(winners, reverse=True):
-				boards.pop(winner)
+				boards.pop(winner)		
 		
-		
-
 def playNumberOnBoard(board, number):
 	for line in board:
 		if number in line:
@@ -78,6 +68,7 @@ def winningBoards(boards):
 						break
 				if completeLine:
 					winning.append(number)
+					break
 	return winning
 
 def winningScore(board):
@@ -89,8 +80,7 @@ def winningScore(board):
 
 def do():
 	strInput = readInputFile(4)
-	#strInput = readExampleInput(4)
-
+	
 	splitInput = strInput.split('\n\n')
 
 	print(do1(splitInput))
