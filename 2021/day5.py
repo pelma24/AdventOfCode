@@ -7,23 +7,29 @@ from collections import defaultdict
 def do1(splitInput):
 	points = defaultdict(lambda: 0)
 
-	for line in splitInput:
-		match = re.fullmatch('(?P<x1>[0-9]+),(?P<y1>[0-9]+) -> (?P<x2>[0-9]+),(?P<y2>[0-9]+)', line)
-		if match:
-			x1 = int(match.group('x1'))
-			x2 = int(match.group('x2'))
-			y1 = int(match.group('y1'))
-			y2 = int(match.group('y2'))
+	parsedLines = parseLines(splitInput)
+	
+	for line in parsedLines:
+		x1,x2,y1,y2 = line
+		addPoints(x1, x2, y1, y2, points, False)
 
-			addPoints(x1,x2,y1,y2, points, 1)
-		else:
-			print('Oops')
 	multiples = findMultiples(points)
 	return len(multiples)
 
 def do2(splitInput):
 	points = defaultdict(lambda: 0)
 
+	parsedLines = parseLines(splitInput)
+	
+	for line in parsedLines:
+		x1,x2,y1,y2 = line
+		addPoints(x1, x2, y1, y2, points, True)
+
+	multiples = findMultiples(points)
+	return len(multiples)
+
+def parseLines(splitInput):
+	parsedLines = []
 	for line in splitInput:
 		match = re.fullmatch('(?P<x1>[0-9]+),(?P<y1>[0-9]+) -> (?P<x2>[0-9]+),(?P<y2>[0-9]+)', line)
 		if match:
@@ -32,13 +38,11 @@ def do2(splitInput):
 			y1 = int(match.group('y1'))
 			y2 = int(match.group('y2'))
 
-			addPoints(x1,x2,y1,y2, points, 2)
-		else:
-			print('Oops')
-	multiples = findMultiples(points)
-	return len(multiples)
+			parsedLines.append((x1,x2,y1,y2))
+	
+	return parsedLines
 
-def addPoints(x1,x2,y1,y2, points, part):
+def addPoints(x1,x2,y1,y2, points, diagonalsAllowed):
 	x = sorted([x1,x2])
 	y = sorted([y1,y2])
 	
@@ -49,25 +53,18 @@ def addPoints(x1,x2,y1,y2, points, part):
 		for i in range(x[0], x[1] + 1):
 			points[(i, y1)] += 1
 	else:
-		if part == 1:
+		if not diagonalsAllowed:
 			return
 		else:
-			if x1 < x2:
-				if y1 < y2:
-					for i in range(x2 - x1 + 1):
-						points[(x1 + i, y1 + i)] += 1
-				else:
-					for i in range(x2 - x1 + 1):
-						points[(x1 + i, y1 - i)] += 1
-			else:
-				if y1 < y2:
-					for i in range(x1 - x2 + 1):
-						points[(x1 - i, y1 + i)] += 1
-				else:
-					for i in range(x1 - x2 + 1):
-						points[(x1 - i, y1 - i)] += 1
-				
-		
+			factorX = 1
+			factorY = 1
+			if x1 > x2:
+				factorX = -1
+			if y1 > y2:
+				factorY = -1
+
+			for i in range(x[1] - x[0] + 1):
+				points[(x1 + factorX * i, y1 + factorY * i)] += 1
 
 def findMultiples(points):
 	multiples = [x for x in points.keys() if points[x] > 1]
@@ -76,7 +73,6 @@ def findMultiples(points):
 
 def do():
 	strInput = readInputFile(5)
-	#strInput = readExampleInput(5)
 
 	splitInput = strInput.split('\n')
 
