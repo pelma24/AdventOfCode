@@ -47,55 +47,54 @@ def getMapping(inputValues):
 		possibleValues = set(allPossibleDigitsPerNumber[length])
 		for digit in inputValue:
 			mapping[digit].intersection_update(possibleValues)
-	# a (7)
-	a = list(set(inputPerLength[3][0]).symmetric_difference(set(inputPerLength[2][0])))[0]
-	mapping[a] = {'a'}
-	removeFromMapping(a, 'a', mapping)
 
 	# c & f (1)
-	one = [x for x in mapping.keys() if mapping[x] == {'c', 'f'}]
-	sumOfOne = 0
-	for input in inputValues:
-		if one[0] in input:
-			sumOfOne += 1
+	one1,one2 = [x for x in mapping.keys() if mapping[x] == {'c', 'f'}]
+	sumOfOne = countOccurence(one1, inputValues)	
+	
 	if sumOfOne == 8:
-		mapping[one[0]] = {'c'}
-		removeFromMapping(one[0], 'c', mapping)
-		removeFromMapping(one[1], 'f', mapping)
+		mapping[one1] = {'c'}
+		removeFromMapping(one1, 'c', mapping)
+		removeFromMapping(one2, 'f', mapping)
 	else:
-		mapping[one[0]] = {'f'}
-		removeFromMapping(one[0], 'f', mapping)
-		removeFromMapping(one[1], 'c', mapping)
+		mapping[one1] = {'f'}
+		removeFromMapping(one1, 'f', mapping)
+		removeFromMapping(one2, 'c', mapping)
+
+	# a (7)
+	seven = [x for x in mapping.keys() if mapping[x] == {'a'}][0]
+	removeFromMapping(seven, 'a', mapping)
 
 	# b & d (4)
-	four = [x for x in mapping.keys() if mapping[x] == {'b', 'd'}]
-	sumOfFour = 0
-	for input in inputValues:
-		if four[0] in input:
-			sumOfFour += 1
+	four1,four2 = [x for x in mapping.keys() if mapping[x] == {'b', 'd'}]
+	sumOfFour = countOccurence(four1, inputValues)
 	if sumOfFour == 6:
-		mapping[four[0]] = {'b'}
-		removeFromMapping(four[0], 'b', mapping)
-		removeFromMapping(four[1], 'd', mapping)
+		mapping[four1] = {'b'}
+		removeFromMapping(four1, 'b', mapping)
+		removeFromMapping(four2, 'd', mapping)
 	else:
-		mapping[four[0]] = {'d'}
-		removeFromMapping(four[0], 'd', mapping)
-		removeFromMapping(four[1], 'b', mapping)
+		mapping[four1] = {'d'}
+		removeFromMapping(four1, 'd', mapping)
+		removeFromMapping(four2, 'b', mapping)
 
 	# e & g
-	others = [x for x in mapping.keys() if mapping[x] == {'e', 'g'}]
-	sumOfOthers = 0
-	for input in inputValues:
-		if others[0] in input:
-			sumOfOthers += 1
+	other1,other2 = [x for x in mapping.keys() if mapping[x] == {'e', 'g'}]
+	sumOfOthers = countOccurence(other1, inputValues)
 	if sumOfOthers == 4:
-		mapping[others[0]] = {'e'}
-		removeFromMapping(others[0], 'e', mapping)
+		mapping[other1] = {'e'}
+		removeFromMapping(other1, 'e', mapping)
 	else:
-		mapping[others[0]] = {'g'}
-		removeFromMapping(others[0], 'g', mapping)
+		mapping[other1] = {'g'}
+		removeFromMapping(other1, 'g', mapping)
 	
 	return mapping
+
+def countOccurence(digit, inputValues):
+	sumOfDigit = 0
+	for input in inputValues:
+		if digit in input:
+			sumOfDigit += 1
+	return sumOfDigit
 
 def removeFromMapping(rightKey, digit, mapping):
 	for key in mapping.keys():
