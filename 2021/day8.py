@@ -4,7 +4,6 @@ from HelperFunctions import convertToInt
 from collections import defaultdict
 
 numberMapping = {1: ['c', 'f'], 2: ['a', 'c', 'd', 'e', 'g'], 3: ['a', 'c', 'd', 'f', 'g'], 4: ['b', 'c', 'd', 'f'], 5: ['a', 'b', 'd', 'f', 'g'], 6: ['a', 'b', 'd', 'e', 'f', 'g'], 7: ['a', 'c', 'f'], 8: ['a', 'b', 'c', 'd', 'e', 'f', 'g'], 9: ['a', 'b', 'c', 'd', 'f', 'g'], 0: ['a', 'b', 'c', 'e', 'f', 'g']}
-sameDigitsPerNumber = {2: ['c', 'f'], 3: ['a', 'c', 'f'], 4: ['b', 'c', 'd', 'f'], 7: ['a', 'b', 'c', 'd', 'e', 'f', 'g'], 5: ['a', 'd', 'f'], 6: ['a', 'b', 'f', 'g']}
 allPossibleDigitsPerNumber = {2: ['c', 'f'], 3: ['a', 'c', 'f'], 4: ['b', 'c', 'd', 'f'], 7: ['a', 'b', 'c', 'd', 'e', 'f', 'g'], 5: ['a', 'b', 'c', 'd', 'e', 'f', 'g'], 6: ['a', 'b', 'c', 'd', 'e', 'f', 'g']}
 
 def do1(splitInput):
@@ -51,26 +50,22 @@ def getMapping(inputValues):
 	# a (7)
 	a = list(set(inputPerLength[3][0]).symmetric_difference(set(inputPerLength[2][0])))[0]
 	mapping[a] = {'a'}
-	for key in mapping.keys():
-		if key != a:
-			if 'a' in mapping[key]:
-				mapping[key].remove('a')
+	removeFromMapping(a, 'a', mapping)
 
 	# c & f (1)
-	one = list(inputPerLength[2][0][0])[0]
-	otherOne = list(inputPerLength[2][0][1])[0]
+	one = [x for x in mapping.keys() if mapping[x] == {'c', 'f'}]
 	sumOfOne = 0
 	for input in inputValues:
-		if one in input:
+		if one[0] in input:
 			sumOfOne += 1
 	if sumOfOne == 8:
-		mapping[one] = {'c'}
-		removeFromMapping(one, 'c', mapping)
-		removeFromMapping(otherOne, 'f', mapping)
+		mapping[one[0]] = {'c'}
+		removeFromMapping(one[0], 'c', mapping)
+		removeFromMapping(one[1], 'f', mapping)
 	else:
-		mapping[one] = {'f'}
-		removeFromMapping(one, 'f', mapping)
-		removeFromMapping(otherOne, 'c', mapping)
+		mapping[one[0]] = {'f'}
+		removeFromMapping(one[0], 'f', mapping)
+		removeFromMapping(one[1], 'c', mapping)
 
 	# b & d (4)
 	four = [x for x in mapping.keys() if mapping[x] == {'b', 'd'}]
@@ -127,7 +122,6 @@ def calculateOutputValues(outputValues, mapping):
 
 def do():
 	strInput = readInputFile(8)
-	#strInput = readExampleInput(8)
 
 	splitInput = strInput.split('\n')
 
