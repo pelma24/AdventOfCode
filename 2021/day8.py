@@ -30,7 +30,7 @@ def do2(splitInput):
 		outputValues = output.split(' ')
 
 		mapping = getMapping(inputValues)
-		outputValue = int(calculateOutputValues(outputValues, mapping))
+		outputValue = calculateOutputValues(outputValues, mapping)
 
 		sumOutputValues += outputValue
 	
@@ -112,17 +112,15 @@ def calculateOutputValues(outputValues, mapping):
 		resultStr = []
 		for digit in outputValue:
 			resultStr.append(list(mapping[digit])[0])
-		
 		sortedResult = sorted(resultStr)
 
 		resultDigit = str([x for x in numberMapping.keys() if sorted(numberMapping[x]) == sortedResult][0])
 		result += resultDigit	
 	
-	return result
+	return int(result)
 
 def do():
 	strInput = readInputFile(8)
-
 	splitInput = strInput.split('\n')
 
 	print(do1(splitInput))
