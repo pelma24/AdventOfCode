@@ -6,7 +6,7 @@ def createFiles(filepath, filepathInput, filepathExampleInput, day):
     if not Path(filepath).exists():
         with open(filepath, 'w') as f:
             f.writelines(['from HelperFunctions import readInputFile\n', 'from HelperFunctions import readExampleInput\n', 'from HelperFunctions import convertToInt\n\n', 'def do1(splitInput):\n', 
-            '\treturn \'done\'\n\n', 'def do2(splitInput):\n', '\treturn \'done\'\n\n', 'def do():\n', f'\tstrInput = readInputFile({day})\n\n', 
+            '\treturn \'done\'\n\n', 'def do2(splitInput):\n', '\treturn \'done\'\n\n', 'def do():\n', f'\tstrInput = readInputFile({day})\n', f'\tstrInput = readExampleInput({day})\n\n',
             '\tprint(do1(strInput))\n', '\tprint(do2(strInput))\n\n', '\tprint(\'done\')\n\n\n', 'do()'])
     if not Path(filepathInput).exists():
         open(filepathInput, 'a').close()
