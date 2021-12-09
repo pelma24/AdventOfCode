@@ -1,47 +1,33 @@
+from types import CodeType
 from HelperFunctions import readInputFile
 from HelperFunctions import readExampleInput
 from HelperFunctions import convertToInt
 
 def do1(splitInput):
-	
+	map, _ = generateMap(splitInput)
 	lowPoints = []
-	inputLength = len(splitInput)
-	for lineNumber,line in enumerate(splitInput):
-		lineLength = len(line)
+	
+	for lineNumber,line in enumerate(map):
 		for position,height in enumerate(line):
-			left = position - 1
-			right = position + 1
-			up = lineNumber - 1
-			down = lineNumber + 1
-
-			height = int(height)
-			if left >= 0 and int(line[left]) <= height:
+			if height == 9:
 				continue
-			if right < lineLength and int(line[right]) <= height:
+			if line[position - 1] <= height:
 				continue
-			if up >= 0 and int(splitInput[up][position]) <= height:
+			if line[position + 1] <= height:
 				continue
-			if down < inputLength and int(splitInput[down][position]) <= height:
+			if map[lineNumber - 1][position] <= height:
 				continue
-			else:
-				lowPoints.append(height)
-	riskLevels = [x+1 for x in lowPoints]
+			if map[lineNumber + 1][position] <= height:
+				continue
+			lowPoints.append(height)
+	
+	riskLevels = [x + 1 for x in lowPoints]
 	
 	return sum(riskLevels)
 
 def do2(splitInput):
-	map = []
-	bassins = []
-	map.append([9] + [9 for x in splitInput[0]] + [9])
-	bassins.append([-1] + [-1 for x in splitInput[0]] + [-1])
-	for line in splitInput:
-		bassinLine = [-1] + [-1 for x in line] + [-1]
-		intLine = [9] + convertToInt(line) + [9]
-		map.append(intLine)
-		bassins.append(bassinLine)
-	map.append([9] + [9 for x in splitInput[0]] + [9])
-	bassins.append([-1] + [-1 for x in splitInput[0]] + [-1])
-
+	map,bassins = generateMap(splitInput)
+	
 	bassinNumber = 0
 	for lineNumber,line in enumerate(map):
 		for position,height in enumerate(line):
@@ -49,11 +35,7 @@ def do2(splitInput):
 				continue
 			if bassins[lineNumber][position] != -1:
 				continue
-			bassins[lineNumber][position] = bassinNumber
-			search(lineNumber - 1, position, map, bassins, bassinNumber)
-			search(lineNumber + 1, position, map, bassins, bassinNumber)
-			search(lineNumber, position - 1, map, bassins, bassinNumber)
-			search(lineNumber, position + 1, map, bassins, bassinNumber)
+			search(lineNumber, position, map, bassins, bassinNumber)
 			bassinNumber += 1
 
 	count = {}
@@ -66,6 +48,21 @@ def do2(splitInput):
 	maxBassins = [x for x in sorted(count.values(), reverse=True)][0:3]
 
 	return maxBassins[0] * maxBassins[1] * maxBassins[2]
+
+def generateMap(splitInput):
+	map = []
+	bassins = []
+	map.append([9] + [9 for x in splitInput[0]] + [9])
+	bassins.append([-1] + [-1 for x in splitInput[0]] + [-1])
+	for line in splitInput:
+		bassinLine = [-1] + [-1 for x in line] + [-1]
+		intLine = [9] + convertToInt(line) + [9]
+		map.append(intLine)
+		bassins.append(bassinLine)
+	map.append([9] + [9 for x in splitInput[0]] + [9])
+	bassins.append([-1] + [-1 for x in splitInput[0]] + [-1])
+
+	return (map,bassins)
 
 def search(line, position, map, bassins, bassinNumber):
 	currentHeight = map[line][position]
@@ -83,10 +80,8 @@ def search(line, position, map, bassins, bassinNumber):
 
 def do():
 	strInput = readInputFile(9)
-	#strInput = readExampleInput(9)
 
 	splitInput = strInput.split('\n')
-
 
 	print(do1(splitInput))
 	print(do2(splitInput))
