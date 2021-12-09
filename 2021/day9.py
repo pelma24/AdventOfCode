@@ -26,22 +26,22 @@ def do1(splitInput):
 	return sum(riskLevels)
 
 def do2(splitInput):
-	map,bassins = generateMap(splitInput)
+	map,basins = generateMap(splitInput)
 	
-	bassinNumber = 0
+	basinNumber = 0
 	for lineNumber,line in enumerate(map):
 		for position,height in enumerate(line):
 			if height == 9:
 				continue
-			if bassins[lineNumber][position] != -1:
+			if basins[lineNumber][position] != -1:
 				continue
-			search(lineNumber, position, map, bassins, bassinNumber)
-			bassinNumber += 1
+			search(lineNumber, position, map, basins, basinNumber)
+			basinNumber += 1
 
 	count = {}
-	for i in range(bassinNumber):
+	for i in range(basinNumber):
 		sumI = 0
-		for line in bassins:
+		for line in basins:
 			sumI += len([x for x in line if x == i])
 		count[i] = sumI
 	
@@ -51,32 +51,32 @@ def do2(splitInput):
 
 def generateMap(splitInput):
 	map = []
-	bassins = []
+	basins = []
 	map.append([9] + [9 for x in splitInput[0]] + [9])
-	bassins.append([-1] + [-1 for x in splitInput[0]] + [-1])
+	basins.append([-1] + [-1 for x in splitInput[0]] + [-1])
 	for line in splitInput:
 		bassinLine = [-1] + [-1 for x in line] + [-1]
 		intLine = [9] + convertToInt(line) + [9]
 		map.append(intLine)
-		bassins.append(bassinLine)
+		basins.append(bassinLine)
 	map.append([9] + [9 for x in splitInput[0]] + [9])
-	bassins.append([-1] + [-1 for x in splitInput[0]] + [-1])
+	basins.append([-1] + [-1 for x in splitInput[0]] + [-1])
 
-	return (map,bassins)
+	return (map,basins)
 
-def search(line, position, map, bassins, bassinNumber):
+def search(line, position, map, basins, bassinNumber):
 	currentHeight = map[line][position]
 	while currentHeight != 9:
-		if bassins[line][position] != -1 and bassins[line][position] != bassinNumber:
+		if basins[line][position] != -1 and basins[line][position] != bassinNumber:
 			print('Something is wrong')
 			return		
-		if bassins[line][position] == bassinNumber:
+		if basins[line][position] == bassinNumber:
 			return
-		bassins[line][position] = bassinNumber
-		search(line - 1, position, map, bassins, bassinNumber)
-		search(line + 1, position, map, bassins, bassinNumber)
-		search(line, position - 1, map, bassins, bassinNumber)
-		search(line, position + 1, map, bassins, bassinNumber)
+		basins[line][position] = bassinNumber
+		search(line - 1, position, map, basins, bassinNumber)
+		search(line + 1, position, map, basins, bassinNumber)
+		search(line, position - 1, map, basins, bassinNumber)
+		search(line, position + 1, map, basins, bassinNumber)
 
 def do():
 	strInput = readInputFile(9)
