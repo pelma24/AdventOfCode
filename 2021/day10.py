@@ -1,19 +1,59 @@
 from HelperFunctions import readInputFile
 from HelperFunctions import readExampleInput
 from HelperFunctions import convertToInt
+from collections import defaultdict
+
+correspondingCharacters = {')':'(', ']':'[', '}':'{', '>':'<'}
+correspondingCharacters_reverse = {'(':')', '[':']', '{':'}', '<':'>'}
+points = {')': 3, ']': 57, '}': 1197, '>': 25137, None: 0}
+points2 = {')': 1, ']': 2, '}': 3, '>': 4, None: 0}
 
 def do1(splitInput):
-	return 'done'
+	score = 0
+
+	for line in splitInput:
+		illegalCharacter,_ = findIllegalCharacter(line)
+		score += points[illegalCharacter]
+	
+	return score
 
 def do2(splitInput):
-	return 'done'
+	scores = []
+
+	for line in splitInput:
+		illegalCharacter,remainingCloses = findIllegalCharacter(line)
+		if not illegalCharacter:
+			lineScore = 0
+			length = len(remainingCloses)
+			for _ in range(length):
+				lineScore = lineScore * 5
+				lineScore += points2[correspondingCharacters_reverse[remainingCloses.pop()]]
+			scores.append(lineScore)
+	
+	sortedScore = sorted(scores)
+	return sortedScore[int(len(sortedScore) / 2)]
+
+def findIllegalCharacter(line):
+	lastOpened = []
+	for character in line:
+		match character:
+			case '(' | '[' | '{' | '<':
+				lastOpened.append(character)
+			case ']' | ')' | '}' | '>' :
+				correspondingCharacter = correspondingCharacters[character]
+				if lastOpened[-1] != correspondingCharacter:
+					return character,lastOpened
+				else:
+					lastOpened.pop()
+	return None,lastOpened
 
 def do():
 	strInput = readInputFile(10)
-	strInput = readExampleInput(10)
 
-	print(do1(strInput))
-	print(do2(strInput))
+	splitInput = strInput.split('\n')
+	
+	print(do1(splitInput))
+	print(do2(splitInput))
 
 	print('done')
 
