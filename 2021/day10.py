@@ -24,14 +24,13 @@ def do2(splitInput):
 		illegalCharacter,remainingCloses = findIllegalCharacter(line)
 		if not illegalCharacter:
 			lineScore = 0
-			length = len(remainingCloses)
-			for _ in range(length):
+			while remainingCloses:
 				lineScore = lineScore * 5
 				lineScore += points2[correspondingCharacters_reverse[remainingCloses.pop()]]
 			scores.append(lineScore)
 	
-	sortedScore = sorted(scores)
-	return sortedScore[int(len(sortedScore) / 2)]
+	scores.sort()
+	return scores[len(scores) // 2]
 
 def findIllegalCharacter(line):
 	lastOpened = []
