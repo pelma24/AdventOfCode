@@ -5,7 +5,7 @@ from collections import defaultdict
 
 def do1(splitInput):
 	paths = preparePaths(splitInput)
-	ways = findPossibleWays(paths, 'start', 'end', [])
+	ways = findPossibleWays(paths, 'start', 'end', [], maxAmount=defaultdict(lambda: 1))
 	return len(ways)
 
 def do2(splitInput):
@@ -21,7 +21,7 @@ def do2(splitInput):
 		if key == 'start' or key == 'end':
 			continue
 		maxAmount[key] = 2
-		ways = findPossibleWays2(paths, 'start', 'end', [], maxAmount)
+		ways = findPossibleWays(paths, 'start', 'end', [], maxAmount)
 		for way in ways:
 			if way not in allWays:
 				allWays.append(way)
@@ -40,28 +40,15 @@ def preparePaths(splitInput):
 	
 	return paths
 
-def findPossibleWays(paths, start, end, path):
+def findPossibleWays(paths, start, end, path, maxAmount):
 	path = path + [start]
 	if start == end:
 		return [path]
 
 	newPaths = []
 	for connected in paths[start]:
-		if connected not in path or connected.isupper():
-			possiblePaths = findPossibleWays(paths, connected, end, path)
-			for possiblePath in possiblePaths:
-				newPaths.append(possiblePath)
-	return newPaths
-
-def findPossibleWays2(paths, start, end, path, maxAmount):
-	path = path + [start]
-	if start == end:
-		return [path]
-
-	newPaths = []
-	for connected in paths[start]:
-		if connected not in path or connected.isupper() or path.count(connected) < maxAmount[connected]:
-			possiblePaths = findPossibleWays2(paths, connected, end, path, maxAmount)
+		if connected.isupper() or path.count(connected) < maxAmount[connected]:
+			possiblePaths = findPossibleWays(paths, connected, end, path, maxAmount)
 			for possiblePath in possiblePaths:
 				newPaths.append(possiblePath)
 	return newPaths
