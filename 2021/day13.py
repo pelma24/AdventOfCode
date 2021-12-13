@@ -9,27 +9,20 @@ def do1(dots, foldInstructions):
 
 	firstInstruction = instructions[0]
 
-	newPoints = set()
-	match firstInstruction:
-		case ('x', value):
-			for x,y in points:
-				if x > value:
-					newPoints.add((value - (x - value), y))
-				else:
-					newPoints.add((x,y))
-		case ('y', value):
-			for x,y in points:
-				if y > value:
-					newPoints.add((x, value - (y - value)))
-				else:
-					newPoints.add((x,y))
-				
+	points = fold(points, [firstInstruction])				
 
-	return len(newPoints)
+	return len(points)
 
 def do2(dots, foldInstructions):
 	points,instructions = getPointsAndInstructions(dots, foldInstructions)
 
+	points = fold(points, instructions)		
+
+	showPoints(points)
+
+	return len(points)
+
+def fold(points, instructions):
 	for instruction in instructions:
 		newPoints = set()
 		match instruction:
@@ -45,20 +38,13 @@ def do2(dots, foldInstructions):
 						newPoints.add((x, value - (y - value)))
 					else:
 						newPoints.add((x,y))
-		points = deepcopy(newPoints)				
-
-	showPoints(points)
-
-	return len(points)
+		points = deepcopy(newPoints)
+	
+	return points
 
 def showPoints(points):
-	maxX = 0
-	maxY = 0
-	for x,y in points:
-		if x > maxX:
-			maxX = x
-		if y > maxY:
-			maxY = y
+	maxX = max([x for x,y in points])
+	maxY = max([y for x,y in points])
 
 	grid = [['.' for i in range(maxX + 1)] for j in range(maxY + 1)]
 	
