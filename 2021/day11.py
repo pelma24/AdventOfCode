@@ -52,25 +52,12 @@ def flash(line, position, octopuses, flashed):
 	octopuses[line][position] = 0
 	flashed.append((line, position))
 
-	if octopuses[line-1][position-1] != -1 and (line-1,position-1) not in flashed:
-		octopuses[line-1][position-1] += 1
-	if octopuses[line-1][position] != -1 and (line-1,position) not in flashed:
-		octopuses[line-1][position] += 1
-	if octopuses[line-1][position+1] != -1 and (line-1,position+1) not in flashed:
-		octopuses[line-1][position+1] += 1
-	
-	if octopuses[line][position-1] != -1 and (line,position-1) not in flashed:
-		octopuses[line][position-1] += 1
-	if octopuses[line][position+1] != -1 and (line,position+1) not in flashed:
-		octopuses[line][position+1] += 1
-	
-	if octopuses[line+1][position-1] != -1 and (line+1,position-1) not in flashed:
-		octopuses[line+1][position-1] += 1
-	if octopuses[line+1][position] != -1 and (line+1,position) not in flashed:
-		octopuses[line+1][position] += 1
-	if octopuses[line+1][position+1] != -1 and (line+1,position+1) not in flashed:
-		octopuses[line+1][position+1] += 1
-
+	for lineDiff in [-1, 0, 1]:
+		for positionDiff in [-1, 0, 1]:
+			if lineDiff == 0 and positionDiff == 0:
+				continue
+			if octopuses[line + lineDiff][position + positionDiff] != -1 and (line + lineDiff, position + positionDiff) not in flashed:
+				octopuses[line + lineDiff][position + positionDiff] += 1
 
 def prepareInput(splitInput):
 	octopuses = []
