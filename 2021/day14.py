@@ -2,32 +2,27 @@ from HelperFunctions import readInputFile
 from HelperFunctions import readExampleInput
 from HelperFunctions import convertToInt
 import re
-from collections import defaultdict
+from collections import Counter
 from copy import deepcopy
+from itertools import pairwise
 
 def do1(start, rules):
 	ruleSet = getRules(rules)
 	
-	resultStr = insert(start, ruleSet, 10)
+	occurences = insert(start, ruleSet, 10)
 
-	occurences = {}
-	for value in ruleSet.values():
-		if value in occurences:
-			continue
-		occurences[value] = resultStr.count(value)
-
-	mostCommon = max([x for x in occurences.values()])
-	leastCommon = min([x for x in occurences.values()])
+	mostCommon = max(occurences.values())
+	leastCommon = min(occurences.values())
 	
 	return mostCommon - leastCommon
 
 def do2(start, rules):
 	ruleSet = getRules(rules)
 	
-	occurences = insert2(start, ruleSet, 40)
+	occurences = insert(start, ruleSet, 40)
 	
-	mostCommon = max([x for x in occurences.values()])
-	leastCommon = min([x for x in occurences.values()])
+	mostCommon = max(occurences.values())
+	leastCommon = min(occurences.values())
 
 	return mostCommon - leastCommon
 
@@ -42,35 +37,22 @@ def getRules(rules):
 	return ruleSet
 
 def insert(start, ruleSet, steps):
-	for i in range(steps):
-		resultStr = ''
-		pairs = [(x,y) for x,y in zip(start, start[1:])]
-
-		for first,second in pairs:
-			resultStr += first + ruleSet[(first,second)]
-		resultStr += second
-		start = resultStr
-
-	return resultStr
-
-def insert2(start, ruleSet, steps):
-	occurences = defaultdict(lambda: 0)
-	pairOccurences = defaultdict(lambda: 0)
+	occurences = Counter()
+	pairOccurences = Counter()
 
 	for x in start:
 		occurences[x] += 1
 
-	pairs = [(x,y) for x,y in zip(start, start[1:])]
-	for (x,y) in pairs:
-		pairOccurences[(x,y)] += 1
+	pairs = pairwise(start)
+	for pair in pairs:
+		pairOccurences[pair] += 1
 
 	newPairOccurences = deepcopy(pairOccurences)
 	for _ in range(steps):
 		pairOccurences = deepcopy(newPairOccurences)
-		for (x,y) in pairOccurences.keys():
-			if pairOccurences[(x,y)] == 0:
+		for (x,y),quantity in pairOccurences.items():
+			if quantity == 0:
 				continue
-			quantity = pairOccurences[(x,y)]
 			newElement = ruleSet[(x,y)]
 			occurences[newElement] += quantity
 
@@ -79,9 +61,6 @@ def insert2(start, ruleSet, steps):
 			newPairOccurences[(x,y)] -= quantity
 
 	return occurences
-
-
-
 
 def do():
 	strInput = readInputFile(14)
