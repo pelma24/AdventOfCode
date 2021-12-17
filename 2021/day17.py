@@ -45,23 +45,16 @@ def fly(position, velocity, targetX, targetY):
 	maxY = -1000000
 	x,y = position
 	xVel,yVel = velocity
-	yMin, yMax = targetY
+	yMin,_ = targetY
 
-	currentMaxY = -1000000
 	while True:	
-		xNew,yNew,xVelNew,yVelNew = step(x, y, xVel, yVel)
-		currentMaxY = max(currentMaxY, yNew) 
-		if isInTargetArea((xNew, yNew), targetX, targetY):
-			maxY = max(maxY, currentMaxY)
-			break
-		if xVelNew == 0:
-			if yNew < yMin:
-				break
-		x = xNew
-		y = yNew
-		xVel = xVelNew
-		yVel = yVelNew
-	return maxY			
+		x,y,xVel,yVel = step(x, y, xVel, yVel)
+		maxY = max(maxY, y)
+		if isInTargetArea((x, y), targetX, targetY):
+			return maxY
+		if xVel == 0:
+			if y < yMin:
+				return -1000000		
 
 def isInTargetArea(position, targetX, targetY):
 	x,y = position
