@@ -52,9 +52,8 @@ def fly(position, velocity, targetX, targetY):
 		maxY = max(maxY, y)
 		if isInTargetArea((x, y), targetX, targetY):
 			return maxY
-		if xVel == 0:
-			if y < yMin:
-				return -1000000		
+		if y < yMin and yVel <= 0:
+			return -1000000		
 
 def isInTargetArea(position, targetX, targetY):
 	x,y = position
