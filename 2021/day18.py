@@ -157,9 +157,6 @@ def calculateMagnitude(addition):
 		return addition
 	left,right = findInner(addition)
 	
-	if str(left).isnumeric() and str(right).isnumeric():
-		return 3 * left + 2 * right
-
 	return 3* calculateMagnitude(left) + 2* calculateMagnitude(right)
 
 def do():
