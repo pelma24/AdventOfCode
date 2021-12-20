@@ -48,10 +48,8 @@ def reduce(addition):
 						length = len(str(left) + str(right) + ',') + 2
 						nextNumberPos = findNextNumber(addition[position+length:])
 						newInput = addition[0:position] + '0' + addition[position + length:]
-						if nextNumberPos != -1:
-							newInput = addToNextNumber(nextNumberPos, right, position, newInput)
-						if lastPosition != -1:
-							newInput = addToLastNumber(lastPosition, left, position, newInput)
+						newInput = addToNextNumber(nextNumberPos, right, position, newInput)
+						newInput = addToLastNumber(lastPosition, left, position, newInput)
 						repeat = True
 						break						
 				case ']':
@@ -75,6 +73,8 @@ def reduce(addition):
 	return newInput
 
 def addToNextNumber(nextNumberPos, right, position, newInput):
+	if nextNumberPos == -1:
+		return newInput
 	number = ''
 	nextNumberStart = position + nextNumberPos + 1
 	currentPos = nextNumberStart
@@ -91,6 +91,8 @@ def addToNextNumber(nextNumberPos, right, position, newInput):
 	return newInput
 
 def addToLastNumber(lastNumberPos, left, position, newInput):
+	if lastNumberPos == -1:
+		return newInput
 	number = ''
 	currentPos = lastNumberPos
 	while newInput[currentPos].isnumeric():
