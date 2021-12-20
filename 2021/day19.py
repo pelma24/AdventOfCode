@@ -2,7 +2,7 @@ from HelperFunctions import readInputFile
 from HelperFunctions import readExampleInput
 from HelperFunctions import convertToInt
 import re
-from collections import Counter, defaultdict
+from collections import Counter
 
 rotations = ['x,y,z', '-x,-y,-z', 'y,-x,z', '-y,x,-z', '-x,-y,z', 'x,y,-z', '-y,x,z', 'y,-x,-z', 'z,y,-x', '-z,-y,x', 'y,-z,-x',
 '-y,z,x', '-z,-y,-x', 'z,y,x', '-y,z,-x', 'y,-z,x', 'z,-x,-y', '-z,x,y', '-x,-z,-y', 'x,z,y',
@@ -44,103 +44,22 @@ def getLargestScannerDistance():
 def getRotatedPoint(point, rotation):
 	x,y,z = point
 	
-	match rotation:
-		case 'x,y,z':
-			return (x,y,z)
-		case '-x,-y,-z':
-			return (-x,-y,-z)
-		case 'y,-x,z':
-			return (y,-x,z)
-		case '-y,x,-z':
-			return (-y,+x,-z)
-		case '-x,-y,z':
-			return (-x,-y,z)
-		case 'x,y,-z':
-			return (x,y,-z)
-		case '-y,x,z':
-			return (-y,x,z)
-		case 'y,-x,-z':
-			return (y,-x,-z)
-		case 'z,y,-x':
-			return (z,y,-x)
-		case '-z,-y,x':
-			return (-z,-y,x)
-		case 'y,-z,-x':
-			return (y,-z,-x)
-		case '-y,z,x':
-			return (-y,z,x)
-		case '-z,-y,-x':
-			return (-z,-y,-x)
-		case 'z,y,x':
-			return (z,y,x)
-		case '-y,z,-x':
-			return (-y,z,-x)
-		case 'y,-z,x':
-			return (y,-z,x)
-		case 'z,-x,-y':
-			return (z,-x,-y)
-		case '-z,x,y':
-			return (-z,x,y)
-		case '-x,-z,-y':
-			return (-x,-z,-y)
-		case 'x,z,y':
-			return (x,z,y)
-		case '-z,x,-y':
-			return (-z,x,-y)
-		case 'z,-x,y':
-			return (z,-x,y)
-		case 'x,z,-y':
-			return (x,z,-y)
-		case '-x,-z,y':
-			return (-x,-z,y)
-		case 'z,-y,x':
-			return (z,-y,x)
-		case '-z,y,-x':
-			return (-z,y,-x)
-		case '-y,-z,x':
-			return (-y,-z,x)
-		case 'y,z,-x':
-			return (y,z,-x)
-		case '-z,y,x':
-			return (-z,y,x)
-		case 'z,-y,-x':
-			return (z,-y,-x)
-		case 'y,z,x':
-			return (y,z,x)
-		case '-y,-z,-x':
-			return (-y,-z,-x)
-		case 'z,x,y':
-			return (z,x,y)
-		case '-z,-x,-y':
-			return (-z,-x,-y)
-		case 'x,-z,y':
-			return (x,-z,y)
-		case '-x,z,-y':
-			return (-x,z,-y)
-		case '-z,-x,y':
-			return (-z,-x,y)
-		case 'z,x,-y':
-			return (z,x,-y)
-		case '-x,z,y':
-			return (-x,z,y)
-		case 'x,-z,-y':
-			return (x,-z,-y)
-		case '-x,y,-z':
-			return (-x,y,-z)
-		case 'x,-y,z':
-			return (x,-y,z)
-		case 'y,x,-z':
-			return (y,x,-z)
-		case '-y,-x,z':
-			return (-y,-x,z)
-		case 'x,-y,-z':
-			return (x,-y,-z)
-		case '-x,y,z':
-			return (-x,y,z)
-		case '-y,-x,-z':
-			return (-y,-x,-z)
-		case 'y,x,z':
-			return (y,x,z)
+	match = re.match('([-]?[xyz]),([-]?[xyz]),([-]?[xyz])', rotation)
+
+	newPoint = []
+	for part in match.groups():
+		negative = 1
+		if len(part) > 1:
+			negative = -1
+			part = part[1]
+		match part:
+			case 'x':
+				newPoint.append(negative * x)
+			case 'y':
+				newPoint.append(negative * y)
+			case 'z':
+				newPoint.append(negative * z)
+	return (newPoint[0], newPoint[1], newPoint[2])
 
 def addPointsToScanner(scannerOrientations, scannerPoints):
 	for scannerNr,position,rotation in scannerOrientations:
