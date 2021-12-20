@@ -23,15 +23,9 @@ def do1(splitInput):
 	
 	return len(scannerPoints[0])
 
-def do2(splitInput):
-	scannerPoints = parseInput(splitInput)
+def do2():
 	
-	while len(alreadyInScanner0) < len(scannerPoints.keys()) - 1:
-		scannerOrientations = findScannerOrientation(scannerPoints)
-
-		addPointsToScanner(scannerOrientations, scannerPoints)
-
-	return getLargestScannerDistance()	
+	return getLargestScannerDistance()
 
 def getLargestScannerDistance():
 	distances = []
@@ -123,7 +117,7 @@ def do():
 	splitInput = strInput.split('\n\n')
 
 	print(do1(splitInput))
-	print(do2(splitInput))
+	print(do2())
 
 	print('done')
 
