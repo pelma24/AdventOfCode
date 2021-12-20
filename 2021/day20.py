@@ -5,7 +5,7 @@ from HelperFunctions import convertToInt
 from copy import deepcopy
 
 def do1(enhancement,image):
-	extendedImage = prepareImage(image)
+	extendedImage = prepareImage(image, 10)
 	
 	newImage = deepcopy(extendedImage)
 
@@ -26,7 +26,25 @@ def do1(enhancement,image):
 	return litPixels
 
 def do2(enhancement,image):
-	return 'done'
+	extendedImage = prepareImage(image, 100)
+	
+	newImage = deepcopy(extendedImage)
+
+	for i in range(50):
+		newImage = enhanceImage(newImage, enhancement)
+		newNewImage = []
+		for lineNumber,line in enumerate(newImage):
+			if lineNumber == 0 or lineNumber == len(newImage) - 1:
+				continue
+			newNewImage.append(line[1:-1])
+		newImage = deepcopy(newNewImage)
+			
+	
+	litPixels = 0
+	for line in newImage:
+		litPixels += len([x for x in line if x == '#'])
+
+	return litPixels
 
 def enhanceImage(image, enhancement):
 	newImage = deepcopy(image)
@@ -54,16 +72,12 @@ def getNeighbors(image, lineNumber, position):
 
 	for lineDiff in [-1,0,1]:
 		for posDiff in [-1,0,1]:
-			#if lineNumber + lineDiff < 0  or lineNumber + lineDiff >= len(image) - 1 or position + posDiff < 0 or position + posDiff >= len(image[0]) - 1:
-			#	neighbors.append('.')
-			#else:
 			neighbors.append(image[lineNumber + lineDiff][position + posDiff])
 
 	neighbors = [0 if x == '.' else 1 for x in neighbors]
 	return neighbors
 
-def prepareImage(image):
-	additionSize = 20
+def prepareImage(image, additionSize):
 	newImage = []
 
 	emptyLine = ['.' for x in range(additionSize)] + ['.' for x in range(len(image[0]))] + ['.' for x in range(additionSize)]
@@ -81,7 +95,6 @@ def prepareImage(image):
 
 def do():
 	strInput = readInputFile(20)
-	#strInput = readExampleInput(20)
 
 	enhancement,image = strInput.split('\n\n')
 	image = image.split('\n')
