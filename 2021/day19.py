@@ -31,8 +31,7 @@ def do2(splitInput):
 
 		addPointsToScanner(scannerOrientations, scannerPoints)
 
-	return getLargestScannerDistance()
-	
+	return getLargestScannerDistance()	
 
 def getLargestScannerDistance():
 	distances = []
@@ -40,7 +39,6 @@ def getLargestScannerDistance():
 		for x2,y2,z2 in scannerPositions:
 			distance = abs(x1-x2) + abs(y1-y2) + abs(z1-z2)
 			distances.append(distance)
-
 	return max(distances)
 
 def getRotatedPoint(point, rotation):
@@ -145,7 +143,7 @@ def getRotatedPoint(point, rotation):
 			return (y,x,z)
 
 def addPointsToScanner(scannerOrientations, scannerPoints):
-	for scannerNr,position,rotation in scannerOrientations[0]:
+	for scannerNr,position,rotation in scannerOrientations:
 		if scannerNr in alreadyInScanner0:
 			continue
 		xPos,yPos,zPos = position
@@ -163,7 +161,7 @@ def addPointsToScanner(scannerOrientations, scannerPoints):
 		alreadyInScanner0.append(scannerNr)
 
 def findScannerOrientation(scannerPoints):
-	scannerOrientation = defaultdict(lambda: [])
+	scannerOrientation = []
 	scanner1 = scannerPoints[0]
 	for secondScanner,scanner2 in scannerPoints.items():
 		if secondScanner == 0 or secondScanner in alreadyInScanner0:
@@ -180,56 +178,9 @@ def findScannerOrientation(scannerPoints):
 			
 			result = [x for x in newPoints.keys() if newPoints[x] > 10]
 			if result:
-				scannerOrientation[0].append((secondScanner, result[0], rotation))
+				scannerOrientation.append((secondScanner, result[0], rotation))
 
 	return scannerOrientation
-
-def getRotations(point):
-	rotations = set()
-	x,y,z = point
-	rotations.add((x,y,z))
-	rotations.add((y,-x,z))
-	rotations.add((-x,-y,z))
-	rotations.add((-y,x,z))
-	rotations.add((z,y,-x))	
-	rotations.add((y,-z,-x))
-	rotations.add((-z,-y,-x))
-	rotations.add((-y,z,-x))
-	rotations.add((z,-x,-y))
-	rotations.add((-x,-z,-y))
-	rotations.add((-z,x,-y))
-	rotations.add((x,z,-y))
-	rotations.add((z,-y,x))
-	rotations.add((-y,-z,x))
-	rotations.add((-z,y,x))
-	rotations.add((y,z,x))
-	rotations.add((z,x,y))
-	rotations.add((x,-z,y))
-	rotations.add((-z,-x,y))
-	rotations.add((-x,z,y))
-	rotations.add((-x,y,-z))
-	rotations.add((y,x,-z))
-	rotations.add((x,-y,-z))
-	rotations.add((-y,-x,-z))
-
-	oldPoints = rotations.copy()
-	for point in oldPoints:
-		x,y,z = point
-		newPoint = (-x,-y,-z)
-		rotations.add(newPoint)
-	return rotations
-
-def rotateX(point):
-	x,y,z = point
-	return (x,-z,y)
-
-def rotateY(point):
-	x,y,z = point
-	return (z,y,-x)
-
-def rotateZ(point):
-	x,y,z = point
-	return (-y,x,z)
 
 def parseInput(splitInput):
 	scannerPoints = {}
@@ -247,28 +198,12 @@ def parseInput(splitInput):
 
 	return scannerPoints
 
-def getNeighborDistances(points):
-	neighborDistances = {}
-
-	for point1 in points:
-		neighborDistances[point1] = []
-		for point2 in points:
-			if point1 == point2:
-				continue
-			x1,y1,z1 = point1
-			x2,y2,z2 = point2
-			distance = abs(x1-x2) + abs(y1-y2) + abs(z1-z2)
-			neighborDistances[point1].append(distance)
-	
-	return neighborDistances
-
 def do():
 	strInput = readInputFile(19)
-	#strInput = readExampleInput(19)
 
 	splitInput = strInput.split('\n\n')
 
-	#print(do1(splitInput))
+	print(do1(splitInput))
 	print(do2(splitInput))
 
 	print('done')
