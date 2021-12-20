@@ -1,4 +1,3 @@
-from typing import NewType
 from HelperFunctions import readInputFile
 from HelperFunctions import readExampleInput
 from HelperFunctions import convertToInt
