@@ -17,7 +17,6 @@ def do2(player1,player2):
 
 	wins1, wins2 = play2(player1, player2, 0, 0)
 
-	print(f'Player1: {wins1}, Player2: {wins2}\n')
 	return max(wins1, wins2)
 
 def getOptions():
