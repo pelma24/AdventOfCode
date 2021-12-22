@@ -36,16 +36,10 @@ def do2(splitInput):
 		for otherCube,activation in processed:
 			intersectionCube = intersectCubes(cube, otherCube)
 			if intersectionCube:
-				if onorOff == activation:
-					if onorOff == 'on':
-						newActivation = 'off'
-					else:
-						newActivation = 'on'
+				if activation == 'on':
+					newActivation = 'off'
 				else:
-					if activation == 'on':
-						newActivation = 'off'
-					else:
-						newActivation = 'on'
+					newActivation = 'on'
 				newCubes.append((intersectionCube, newActivation))
 			
 		if onorOff == 'on':
@@ -60,99 +54,6 @@ def do2(splitInput):
 			on += volume
 		else:
 			on -= volume
-	return on	
-	
-def do2_wrong(splitInput):
-	on = 0
-	
-	cubes_on = []
-	cubes_off = []
-	for line in splitInput:
-		onorOff,xmin,xmax,ymin,ymax,zmin,zmax = getLine(line)
-		cube = (xmin,xmax,ymin,ymax,zmin,zmax)
-		if onorOff == 'on':
-			onIntersections = []
-			offIntersections = []
-			newOn = getCubeVolume(cube)
-			for otherCube in cubes_on:
-				intersection = intersectCubes(cube, otherCube)
-				newOn -= getCubeVolume(intersection)
-				newOn = max(0, newOn)
-				if intersection:
-					onIntersections.append(intersection)	
-			for otherCube in cubes_off:
-				intersection = intersectCubes(cube, otherCube)
-				newOn += getCubeVolume(intersection)
-				if intersection:
-					offIntersections.append(intersection)
-			
-			commonOn = 0
-			newOnIntersections = []
-			prefix = 1
-			while len(onIntersections) > 1:
-				visited = []
-				for firstInt in onIntersections:
-					visited.append(firstInt)
-					for secondInt in onIntersections:
-						if secondInt in visited:
-							continue
-						intersection = intersectCubes(firstInt, secondInt)
-						commonOn += prefix * getCubeVolume(intersection)
-						if intersection:
-							newOnIntersections.append(intersection)
-				onIntersections = newOnIntersections.copy()
-				prefix = -prefix
-			
-			commonOff = 0
-			for firstInt in onIntersections:
-				for secondInt in offIntersections:
-					if firstInt == secondInt:
-						continue
-					commonOff += getCubeVolume(intersectCubes(firstInt, secondInt))
-
-			newOn -= commonOff // 2
-			newOn += commonOn // 2
-
-			on += newOn
-			cubes_on.append(cube)
-		else:
-			onIntersections = []
-			offIntersections = []
-			newOff = 0
-			for otherCube in cubes_on:
-				intersection = intersectCubes(cube, otherCube)
-				newOff += getCubeVolume(intersection)
-				if intersection:
-					onIntersections.append(intersection)			
-			for otherCube in cubes_off:
-				intersection = intersectCubes(cube, otherCube)
-				newOff -= getCubeVolume(intersection)
-				newOff = max(0, newOff)
-				if intersection:
-					offIntersections.append(intersection)
-
-			commonOn = 0
-			for firstInt in onIntersections:
-				for secondInt in onIntersections:
-					if firstInt == secondInt:
-						continue
-					commonOn += getCubeVolume(intersectCubes(firstInt, secondInt))
-			
-			commonOff = 0
-			for firstInt in onIntersections:
-				for secondInt in offIntersections:
-					if firstInt == secondInt:
-						continue
-					commonOff += getCubeVolume(intersectCubes(firstInt, secondInt))			
-
-			newOff -= commonOn // 2
-			newOff += commonOff // 2
-
-			on -= newOff
-			cubes_off.append(cube)
-
-		print(on)
-
 	return on
 
 def getCubeVolume(cube):
