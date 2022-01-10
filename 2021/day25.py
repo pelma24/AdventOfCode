@@ -9,6 +9,8 @@ def do1(splitInput):
 		newLine = [x for x in line]
 		map.append(newLine)	
 	
+	mapLength = len(map)
+
 	newMap = deepcopy(map)
 	moving = True
 	steps = 0
@@ -19,24 +21,21 @@ def do1(splitInput):
 		if not southfacing:
 			steps += 1
 		for lineNumber,line in enumerate(map):
+			lineLength = len(line)
 			for position,value in enumerate(line):
 				match value:
 					case '.':
 						continue
 					case 'v':
 						if southfacing:
-							neighborLine = lineNumber + 1
-							if neighborLine == len(map):
-								neighborLine = 0
+							neighborLine = (lineNumber + 1) % mapLength
 							if map[neighborLine][position] == '.':
 								newMap[neighborLine][position] = 'v'
 								newMap[lineNumber][position] = '.'
 								moving = True
 					case '>':
 						if not southfacing:
-							neighborPos = position + 1
-							if neighborPos == len(line):
-								neighborPos = 0
+							neighborPos = (position + 1) % lineLength
 							if line[neighborPos] == '.':
 								newMap[lineNumber][neighborPos] = '>'
 								newMap[lineNumber][position] = '.'
