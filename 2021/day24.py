@@ -5,8 +5,7 @@ inputDict = {1: 2, 2: 3, 3: 4, 4: 5, 5: 6, 6: 7, 7: 8, 8: 9, 9: 10}
 def do1():
 
 	global inputDict
-	k1 = [1, 1, 1, 26, 1, 1, 1, 26, 26, 1, 26, 26, 26, 26]
-	k3 = [1, 10, 2, 5, 6, 0, 16, 12, 15, 7, 6, 5, 6, 15]
+	k = [1, 10, 2, 5, 6, 0, 16, 12, 15, 7, 6, 5, 6, 15]
 	special = {3: 10, 7: 11, 8: 7, 10: 13, 11: 0, 12: 11, 13: 0, }
 
 	for position in range(1,14):
@@ -21,7 +20,7 @@ def do1():
 				newDict[oldW * 10 + w] = znew	
 			else:
 				for w in range(1,10):
-					znew = calculateZ(z, w, k1[position], k3[position])
+					znew = 26 * z + w + k[position]
 					newDict[oldW * 10 + w] = znew
 			del newDict[oldW]
 		inputDict = newDict.copy()
@@ -29,11 +28,6 @@ def do1():
 	possibleValues = [x for x in inputDict.keys() if inputDict[x] == 0]
 
 	return max(possibleValues)			
-
-@cache
-def calculateZ(z, w, k1, k3):
-	z = (z // k1) * 26 + w + k3
-	return z
 
 def do2():
 	global inputDict
