@@ -12,48 +12,40 @@ def do1(splitInput):
 	newMap = deepcopy(map)
 	moving = True
 	steps = 0
-	
-	while moving:
+	southfacing = True
+	while moving or not southfacing:
+		southfacing = not southfacing
 		moving = False
-		steps += 1
+		if not southfacing:
+			steps += 1
 		for lineNumber,line in enumerate(map):
 			for position,value in enumerate(line):
 				match value:
 					case '.':
 						continue
 					case 'v':
-						continue
+						if southfacing:
+							neighborLine = lineNumber + 1
+							if neighborLine == len(map):
+								neighborLine = 0
+							if map[neighborLine][position] == '.':
+								newMap[neighborLine][position] = 'v'
+								newMap[lineNumber][position] = '.'
+								moving = True
 					case '>':
-						neighborPos = position + 1
-						if neighborPos == len(line):
-							neighborPos = 0
-						if line[neighborPos] == '.':
-							newMap[lineNumber][neighborPos] = '>'
-							newMap[lineNumber][position] = '.'
-							moving = True
-		map = deepcopy(newMap)
-		# again for south-facing
-		for lineNumber,line in enumerate(map):
-			for position,value in enumerate(line):
-				match value:
-					case '.':
-						continue
-					case 'v':
-						neighborLine = lineNumber + 1
-						if neighborLine == len(map):
-							neighborLine = 0
-						if map[neighborLine][position] == '.':
-							newMap[neighborLine][position] = 'v'
-							newMap[lineNumber][position] = '.'
-							moving = True
-					case '>':
-						continue
-
-		map = deepcopy(newMap)
+						if not southfacing:
+							neighborPos = position + 1
+							if neighborPos == len(line):
+								neighborPos = 0
+							if line[neighborPos] == '.':
+								newMap[lineNumber][neighborPos] = '>'
+								newMap[lineNumber][position] = '.'
+								moving = True
+		map = deepcopy(newMap)		
 	
 	return steps
 
-def do2(splitInput):
+def do2():
 	return 'Nothing to do'
 
 def do():
@@ -62,7 +54,7 @@ def do():
 	splitInput = strInput.split('\n')
 
 	print(do1(splitInput))
-	print(do2(splitInput))
+	print(do2())
 
 	print('done')
 
