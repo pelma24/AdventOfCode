@@ -15,9 +15,9 @@ def do1(player1,player2):
 
 def do2(player1,player2):
 
-	wins1, wins2 = play2(player1, player2, 0, 0)
+	wins = play2(player1, player2, 0, 0)
 
-	return max(wins1, wins2)
+	return max(wins)
 
 def getOptions():
 	options = []
@@ -79,8 +79,7 @@ def play2(first, second, score1, score2):
 					result1, result2 = play2(newfirst,newsecond,newscore1,newscore2)
 					result = (result[0] + number * number2 * result1, result[1] + number * number2 * result2)
 			else:
-				result1, result2 = play2(newfirst,second,newscore1,score2)
-				result = (result[0] + number * result1, result[1] + number * result2)
+				result = (result[0] + number, result[1])
 		return result
 
 def getDice():
