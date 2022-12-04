@@ -7,7 +7,7 @@ def do1(splitInput):
 	for pair in splitInput:
 		elf1Assignment,elf2Assignment = getElvesAssignments(pair)
 		intersection = elf1Assignment.intersection(elf2Assignment)
-		if len(intersection) == len(elf1Assignment) or len(intersection) == len(elf2Assignment):
+		if intersection == elf1Assignment or intersection == elf2Assignment:
 			fullyContained += 1
 	return fullyContained
 
@@ -27,7 +27,6 @@ def getElvesAssignments(pair):
 	elf2Assignment = set([x for x in range(elf2Start, elf2Stop + 1)])
 
 	return (elf1Assignment,elf2Assignment)
-
 
 def do():
 	strInput = readInputFile(4)
