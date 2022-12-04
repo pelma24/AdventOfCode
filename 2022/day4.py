@@ -6,8 +6,7 @@ def do1(splitInput):
 	fullyContained = 0
 	for pair in splitInput:
 		elf1Assignment,elf2Assignment = getElvesAssignments(pair)
-		intersection = elf1Assignment.intersection(elf2Assignment)
-		if intersection == elf1Assignment or intersection == elf2Assignment:
+		if elf1Assignment.issubset(elf2Assignment) or elf2Assignment.issubset(elf1Assignment):
 			fullyContained += 1
 	return fullyContained
 
