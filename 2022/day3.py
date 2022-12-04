@@ -22,9 +22,9 @@ def do2(splitInput):
 	return prioritySum
 
 def calculatePriorityValue(item):
-	if 'a' <= item <= 'z':
+	if item.islower():
 		return ord(item) - ord('a') + 1
-	elif 'A' <= item <= 'Z':
+	elif item.isupper():
 		return ord(item) - ord('A') + 27
 
 def do():
