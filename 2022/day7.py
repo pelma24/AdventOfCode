@@ -26,31 +26,21 @@ def do2(splitInput):
 def buildFileSystemTree(splitInput):
 	currentDirectory = '/'
 	for line in splitInput:
-		matchCommand = re.match('\$ .+', line)
-		if matchCommand:
-			match line [2:4]:
-				case 'cd':
-					match line[5:]:
-						case '..':
-							currentDirectory = parentDir[currentDirectory]
-						case '/':
-							currentDirectory = '/'
-						case _:
-							currentDirectory = currentDirectory + '/' + line[5:]
-				case 'ls':
-					tree[currentDirectory] = []
-		else:
-			matchFolder = re.match('dir .+', line)
-			if matchFolder:
-				folder = line[4:]
+		match line.split(' '):
+			case ['$', 'cd', '..']:
+				currentDirectory = parentDir[currentDirectory]
+			case ['$','cd', '/']:
+				currentDirectory = '/'
+			case ['$','cd', directory]:
+				currentDirectory = currentDirectory + '/' + directory
+			case ['$', 'ls']:
+				tree[currentDirectory] = []
+			case ['dir', folder]:
 				tree[currentDirectory].append(currentDirectory + '/' + folder)
 				parentDir[currentDirectory + '/' + folder] = currentDirectory
-			else:
-				matchFile = re.match('(?P<size>\d+) (?P<name>\D+)', line)
-				size = int(matchFile.group('size'))
-				name = matchFile.group('name')
+			case [size, name]:
 				tree[currentDirectory].append(currentDirectory + '/' + name)
-				fileSizes[currentDirectory + '/' + name] = size
+				fileSizes[currentDirectory + '/' + name] = int(size)
 
 def calculateSizes(key):
 	if key in fileSizes.keys():
