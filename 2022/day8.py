@@ -3,23 +3,11 @@ from HelperFunctions import readExampleInput
 from HelperFunctions import convertToInt
 
 def do1(splitInput):
-	lineLength = len(splitInput[0])
-	inputLength = len(splitInput)
 	visibleTrees = 0
 	for linePos,line in enumerate(splitInput):
 		for position,_ in enumerate(line):
-			match (linePos,position):
-				case (0,_):
-					visibleTrees += 1
-				case (linePos,_) if linePos == inputLength - 1:
-					visibleTrees += 1
-				case (linePos, 0):
-					visibleTrees += 1
-				case (linePos, position) if position == lineLength - 1:
-					visibleTrees += 1
-				case (linePos, position):
-					if onlySmallerTrees(linePos,position,splitInput):
-						visibleTrees += 1
+			if onlySmallerTrees(linePos,position,splitInput):
+				visibleTrees += 1
 	return visibleTrees
 
 def do2(splitInput):
