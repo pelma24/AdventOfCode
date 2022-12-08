@@ -1,0 +1,112 @@
+from HelperFunctions import readInputFile
+from HelperFunctions import readExampleInput
+from HelperFunctions import convertToInt
+
+def do1(splitInput):
+	lineLength = len(splitInput[0])
+	inputLength = len(splitInput)
+	visibleTrees = 0
+	for linePos,line in enumerate(splitInput):
+		for position,_ in enumerate(line):
+			match (linePos,position):
+				case (0,_):
+					visibleTrees += 1
+				case (linePos,_) if linePos == inputLength - 1:
+					visibleTrees += 1
+				case (linePos, 0):
+					visibleTrees += 1
+				case (linePos, position) if position == lineLength - 1:
+					visibleTrees += 1
+				case (linePos, position):
+					if onlySmallerTrees(linePos,position,splitInput):
+						visibleTrees += 1
+	return visibleTrees
+
+def do2(splitInput):
+	scenicScores = []
+
+	for linePos,line in enumerate(splitInput):
+		for position,_ in enumerate(line):
+			scenicScores.append(calculateScenicScore(linePos,position,splitInput))
+
+	return max(scenicScores)
+
+def onlySmallerTrees(linePos, position, map):
+	tree = map[linePos][position]
+	
+	#left
+	visible = True
+	for i in range(0,position):
+		if map[linePos][i] >= tree:
+			visible = False
+	if visible:
+		return True
+
+	#right
+	visible = True
+	for i in range(position + 1,len(map[linePos])):
+		if map[linePos][i] >= tree:
+			visible = False
+	if visible:
+		return True
+
+	#up
+	visible = True
+	for i in range(0, linePos):
+		if map[i][position] >= tree:
+			visible = False
+	if visible:
+		return True
+
+	#down
+	visible = True
+	for i in range(linePos + 1, len(map)):
+		if map[i][position] >= tree:
+			visible = False
+	return visible
+
+def calculateScenicScore(linePos,position,map):
+	tree = map[linePos][position]
+	
+	#right
+	scoreRight = 0
+	for i in range(position + 1, len(map[linePos])):
+		scoreRight += 1
+		if map[linePos][i] >= tree:
+			break
+	
+	#left
+	scoreLeft = 0
+	for i in range(position - 1, -1, -1):
+		scoreLeft += 1
+		if map[linePos][i] >= tree:
+			break
+	
+	#down
+	scoreDown = 0
+	for i in range(linePos + 1, len(map)):
+		scoreDown += 1
+		if map[i][position] >= tree:
+			break
+	
+	#up
+	scoreUp = 0
+	for i in range(linePos - 1, -1, -1):
+		scoreUp += 1
+		if map[i][position] >= tree:
+			break
+	
+	return scoreRight * scoreLeft * scoreDown * scoreUp
+
+def do():
+	strInput = readInputFile(8)
+
+	splitInput = strInput.split('\n')
+
+	print(do1(splitInput))
+	print(do2(splitInput))
+
+	print('done')
+
+
+do()
