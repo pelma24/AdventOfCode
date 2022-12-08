@@ -35,35 +35,24 @@ def onlySmallerTrees(linePos, position, map):
 	tree = map[linePos][position]
 	
 	#left
-	visible = True
-	for i in range(0,position):
-		if map[linePos][i] >= tree:
-			visible = False
-	if visible:
+	otherTrees = [x for x in map[linePos][0:position] if x >= tree]
+	if not otherTrees:
 		return True
 
 	#right
-	visible = True
-	for i in range(position + 1,len(map[linePos])):
-		if map[linePos][i] >= tree:
-			visible = False
-	if visible:
+	otherTrees = [x for x in map[linePos][position + 1:] if x >= tree]
+	if not otherTrees:
 		return True
 
 	#up
-	visible = True
-	for i in range(0, linePos):
-		if map[i][position] >= tree:
-			visible = False
-	if visible:
+	otherTrees = [x[position] for x in map[0:linePos] if x[position] >= tree]
+	if not otherTrees:
 		return True
 
 	#down
-	visible = True
-	for i in range(linePos + 1, len(map)):
-		if map[i][position] >= tree:
-			visible = False
-	return visible
+	otherTrees = [x[position] for x in map[linePos+1:] if x[position] >= tree]
+	if not otherTrees:
+		return True
 
 def calculateScenicScore(linePos,position,map):
 	tree = map[linePos][position]
