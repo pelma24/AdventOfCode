@@ -22,8 +22,7 @@ def do1(splitInput):
 				case 'U':
 					HPos = (HPos[0], HPos[1] + 1)
 			TPos = updatePos(HPos, TPos)
-			TPositions.add(TPos)
-	
+			TPositions.add(TPos)	
 	
 	return len(TPositions)
 
@@ -48,8 +47,6 @@ def do2(splitInput):
 				tailPositions.add(positions[-1])
 	
 	return len(tailPositions)
-
-
 
 def updatePos(HPos, TPos):
 	TPositions.add(TPos)
@@ -82,8 +79,6 @@ def updatePos(HPos, TPos):
 			else:
 				TPos = (TPos[0] - 1, TPos[1] - 1)
 	return TPos
-	
-
 
 def do():
 	strInput = readInputFile(9)
