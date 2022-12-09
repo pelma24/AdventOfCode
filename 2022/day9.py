@@ -29,7 +29,7 @@ def do1(splitInput):
 
 def do2(splitInput):
 	positions = [(0,0) for x in range(10)]
-	tailPositions.add(positions[8])
+	tailPositions.add(positions[-1])
 	for line in splitInput:
 		command,steps = line.split(' ')
 		for _ in range(int(steps)):
@@ -45,7 +45,7 @@ def do2(splitInput):
 					positions[0] = (headPos[0], headPos[1] + 1)
 			for index,knot in enumerate(positions[1:]):
 				positions[index + 1] = updatePos(positions[index], knot)
-				tailPositions.add(positions[len(positions) - 1])
+				tailPositions.add(positions[-1])
 	
 	return len(tailPositions)
 
