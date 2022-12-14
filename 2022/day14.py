@@ -6,37 +6,11 @@ def do1(splitInput):
 	map = buildWalls(splitInput)
 	sand = set()
 
-	boundaryLeft = min([x[0] for x in map])
-	boundaryRight = max([x[0] for x in map])
-	
-	sandStart = (500,0)
-	rested = True
+	rested,restingPos = letTheSandFall(map, sand)
 	while rested:
-		falling = True
-		position = sandStart
-		while falling:
-			newPosition = (position[0], position[1] + 1)
-			if newPosition in map or newPosition in sand:
-				# diagonally left
-				if (newPosition[0] - 1, newPosition[1]) in map or (newPosition[0] - 1, newPosition[1]) in sand:
-					# diagonally right
-					if (newPosition[0] + 1, newPosition[1]) in map or (newPosition[0] + 1, newPosition[1]) in sand:
-						sand.add(position)
-						falling = False
-					else:
-						position = (position[0] + 1, position[1] + 1)
-						if position[0] > boundaryRight:
-							rested = False
-							break
-						continue
-				else:
-					position = (position[0] - 1, position[1] + 1)
-					if position[0] < boundaryLeft:
-							rested = False
-							break
-					continue
-			else:
-				position = newPosition
+		sand.add(restingPos)
+		rested,restingPos = letTheSandFall(map, sand)
+
 	return len(sand)
 
 def do2(splitInput):
@@ -48,31 +22,13 @@ def do2(splitInput):
 	for x in range(-1000, 1000+1):
 		map.add((x, highestY + 2))
 
-	sandStart = (500,0)
-	full = False
-	while not full:
-		falling = True
-		position = sandStart
-		while falling:
-			newPosition = (position[0], position[1] + 1)
-			if newPosition in map or newPosition in sand:
-				# diagonally left
-				if (newPosition[0] - 1, newPosition[1]) in map or (newPosition[0] - 1, newPosition[1]) in sand:
-					# diagonally right
-					if (newPosition[0] + 1, newPosition[1]) in map or (newPosition[0] + 1, newPosition[1]) in sand:
-						sand.add(position)
-						if position == sandStart:
-							full = True
-							break
-						falling = False
-					else:
-						position = (position[0] + 1, position[1] + 1)
-						continue
-				else:
-					position = (position[0] - 1, position[1] + 1)
-					continue
-			else:
-				position = newPosition
+	rested,restingPos = letTheSandFall(map, sand)
+	while rested:
+		sand.add(restingPos)
+		if restingPos == (500,0):
+			break
+		rested,restingPos = letTheSandFall(map, sand)
+
 	return len(sand)
 
 def buildWalls(splitInput):
@@ -94,6 +50,32 @@ def buildWalls(splitInput):
 		
 	return map
 
+def letTheSandFall(map, sand):
+	boundaryLeft = min([x[0] for x in map])
+	boundaryRight = max([x[0] for x in map])
+	
+	sandStart = (500,0)
+	position = sandStart
+	while True:
+		newPosition = (position[0], position[1] + 1)
+		if newPosition in map or newPosition in sand:
+			# diagonally left
+			if (newPosition[0] - 1, newPosition[1]) in map or (newPosition[0] - 1, newPosition[1]) in sand:
+				# diagonally right
+				if (newPosition[0] + 1, newPosition[1]) in map or (newPosition[0] + 1, newPosition[1]) in sand:
+					return True,position
+				else:
+					position = (position[0] + 1, position[1] + 1)
+					if position[0] > boundaryRight:
+						return False,(0,0)
+					continue
+			else:
+				position = (position[0] - 1, position[1] + 1)
+				if position[0] < boundaryLeft:
+						return False,(0,0)
+				continue
+		else:
+			position = newPosition
 
 def do():
 	strInput = readInputFile(14)
