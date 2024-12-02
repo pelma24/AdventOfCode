@@ -11,8 +11,18 @@ def isSafe(report):
 	
 	return False
 
-
 def do1(splitInput):
+	
+	result = 0
+	for report in splitInput:
+		report = convertToInt(report.split(' '))
+		
+		if isSafe(report):
+			result = result + 1
+			
+	return result
+
+def do2(splitInput):
 	
 	result = 0
 	for report in splitInput:
@@ -30,9 +40,6 @@ def do1(splitInput):
 					break
 	
 	return result
-
-def do2(splitInput):
-	return 'done'
 
 def do():
 	strInput = readInputFile(2)
