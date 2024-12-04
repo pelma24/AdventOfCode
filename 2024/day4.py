@@ -8,7 +8,6 @@ word = ['X','M','A','S']
 def prepareBoard(board):
 
 	newBoard = []
-
 	newBoard.append(['.' for x in range(len(board[0])+2)])
 
 	for line in board:
@@ -19,45 +18,54 @@ def prepareBoard(board):
 
 	return newBoard
 
-def findWordInDirection(posX,posY,direction,board):
-	
-	currentPos = (posX,posY)
-	for wordPos in range(1,5):
-		if wordPos == 4:
-			return True
-		
-		currentPos = (currentPos[0] + direction[0], currentPos[1] + direction[1])
-		if not(board[currentPos[1]][currentPos[0]] == word[wordPos]):
-			return False
-
-	return False
-
-def findWords(posX,posY,board):
-
+def findWordInDirections(posX,posY,board):
 	words = 0
 
-	for direction in directions.keys():
-		words = words + findWordInDirection(posX,posY,directions[direction],board)
+	for direction in directions.values():
+		currentPos = (posX,posY)
+		for wordPos in range(1,5):
+			if wordPos == 4:
+				words = words + 1
+				break
+		
+			currentPos = (currentPos[0] + direction[0], currentPos[1] + direction[1])
+			if not(board[currentPos[1]][currentPos[0]] == word[wordPos]):
+				break
 
 	return words
 
-def do1(board):
+def isXMAS(posX,posY,board):
 
+	if (board[posY-1][posX-1] == 'M' and board[posY+1][posX+1] == 'S') or (board[posY-1][posX-1] == 'S' and board[posY+1][posX+1] == 'M'):
+		if (board[posY+1][posX-1] == 'M' and board[posY-1][posX+1] == 'S') or (board[posY+1][posX-1] == 'S' and board[posY-1][posX+1] == 'M'):
+			return 1
+	
+	return 0
+
+def do1(board):
+	
 	words = 0
 
 	for posY,line in enumerate(board):
 		for posX,value in enumerate(line):
 			if value == 'X':
-				words = words + findWords(posX,posY,board)
+				words = words + findWordInDirections(posX,posY,board)
 
 	return words
 
-def do2(splitInput):
-	return 'done'
+def do2(board):
+	
+	occurrences = 0
+
+	for posY,line in enumerate(board):
+		for posX,value in enumerate(line):
+			if value == 'A':
+				occurrences = occurrences + isXMAS(posX,posY,board)	
+	
+	return occurrences
 
 def do():
 	strInput = readInputFile(4)
-	#strInput = readExampleInput(4)
 
 	board = prepareBoard(strInput.split('\n'))
 
