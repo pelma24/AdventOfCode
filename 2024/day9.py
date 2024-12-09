@@ -3,59 +3,45 @@ from HelperFunctions import readExampleInput
 from HelperFunctions import convertToInt
 
 def prepareDisk(strInput):
-	disk = []
+	disk1 = []
+	disk2 = []
 	id = 0
 	freeSpace = False
 	for number in strInput:
 		number = int(number)
 		if freeSpace:
-			for i in range(number):
-				disk.append('.')
+			for _ in range(number):
+				disk1.append('.')
+			if number != 0:
+				disk2.append(('.', number))
 			freeSpace = False
 		else:
 			for _ in range(number):
-				disk.append(id)
+				disk1.append(id)
+			disk2.append((id, number))			
 			id = id + 1
 			freeSpace = True
 
-	return disk
-
-def prepareDisk2(strInput):
-	disk = []
-	id = 0
-	freeSpace = False
-	for number in strInput:
-		number = int(number)
-		if freeSpace:
-			if number != 0:
-				disk.append(('.', number))
-			freeSpace = False
-		else:
-			disk.append((id, number))
-			id = id + 1
-			freeSpace = True
-
-	return disk
+	return disk1, disk2
 
 def move(disk, movingPart, pos):
 	id,size = movingPart
 	for position,part in enumerate(disk):
 		if position > pos:
-			continue
+			break
 		match part:
-			case ('.', freeSize) if freeSize >= size:
-				if freeSize > size:
-					disk[pos] = ('.', size)
-					disk = disk[0:position] + [(id, size)] + [('.', freeSize - size)] + disk[position + 1:]
-				else:
-					disk[position] = (id, size)
-					disk[pos] = ('.', size)
+			case ('.', freeSize) if freeSize > size:
+				disk[pos] = ('.', size)
+				disk = disk[0:position] + [(id, size)] + [('.', freeSize - size)] + disk[position + 1:]
+				return disk
+			case ('.', freeSize) if freeSize == size:
+				disk[position] = (id, size)
+				disk[pos] = ('.', size)
 				return disk
 			case _:
 				continue
 
 	return disk
-
 
 def do1(disk):
 
@@ -72,13 +58,7 @@ def do1(disk):
 		disk[pos] = newValue
 		pos = pos + 1
 
-	checksum = 0
-	for pos,value in enumerate(disk):
-		if value == '.':
-			continue
-		checksum = checksum + pos * value	
-	
-	return checksum
+	return sum([pos * value for pos,value in enumerate(disk) if value != '.'])
 
 def do2(disk):
 	alreadyMoved = set()
@@ -111,10 +91,8 @@ def do2(disk):
 def do():
 	strInput = readInputFile(9)
 
-	disk1 = prepareDisk(strInput)
+	disk1,disk2 = prepareDisk(strInput)
 	print(do1(disk1))
-
-	disk2 = prepareDisk2(strInput)
 	print(do2(disk2))
 
 	print('done')
