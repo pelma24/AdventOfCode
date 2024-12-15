@@ -3,6 +3,7 @@ from HelperFunctions import readExampleInput
 from HelperFunctions import convertToInt
 import re
 
+xCount = {}
 robotPosition = {}
 robotVelocity = {}
 
@@ -52,7 +53,25 @@ def calculateSafetyFactor():
 	
 	return first * second * third * fourth
 
-def do1():
+def printRobots(count):
+	map = [['.' for i in range(101)] for j in range(103)]
+
+	numberOfX = 0
+	for robot in robotPosition.values():
+		x,y = robot
+		if map[y][x] != 'x':
+			numberOfX += 1
+			map[y][x] = 'x'
+		
+	xCount[count] = numberOfX
+	if numberOfX == 500:
+		print(count)
+	
+	#if count == 6277:
+	#	for line in map:
+	#		print(line)
+
+def do1():               
 
 	for _ in range(100):
 		for robot in robotPosition.keys():
@@ -62,8 +81,14 @@ def do1():
 	
 	return safetyFactor
 
-def do2(splitInput):
-	return 'done'
+def do2():
+	for count in range(101, 15000):
+		for robot in robotPosition.keys():
+			move(robot)
+		printRobots(count)
+	
+	maxRobotsVisible = max([x for x in xCount.values()])
+	return [x for x in xCount.keys() if xCount[x] == maxRobotsVisible][0]
 
 def do():
 	strInput = readInputFile(14)
@@ -71,7 +96,7 @@ def do():
 	extractRobotInfo(strInput)
 
 	print(do1())
-	print(do2(strInput))
+	print(do2())
 
 	print('done')
 
