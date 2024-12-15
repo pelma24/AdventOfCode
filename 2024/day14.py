@@ -64,13 +64,7 @@ def printRobots(count):
 			map[y][x] = 'x'
 		
 	xCount[count] = numberOfX
-	if numberOfX == 500:
-		print(count)
 	
-	#if count == 6277:
-	#	for line in map:
-	#		print(line)
-
 def do1():               
 
 	for _ in range(100):
