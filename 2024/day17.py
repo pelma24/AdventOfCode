@@ -21,7 +21,6 @@ def getComboOperand(operand,a,b,c):
 				return operand
 
 def do1(program,a,b,c):
-
 	position = 0
 	output = []
 	while position < len(program):
@@ -56,14 +55,26 @@ def do1(program,a,b,c):
 
 	return output
 
-def do2(program,a,b,c):
-	
-	return 'done'
+def do2(program):
+	a = 0
+	outputLength = len(program)
+	output = do1(program,a,0,0)
+
+	while len(output) < outputLength:
+		a = a * 8
+		for offset in range(0,8):
+			newA = a + offset
+			output = do1(program,newA,0,0)
+			diffLength = outputLength - len(output)
+			if program[diffLength:] == output:
+				a = newA
+				break	
+	return a
 
 def do():
 	strInput = readInputFile(17)
 	
-	registerInput,programInput = strInput.split('\n\n')
+	_,programInput = strInput.split('\n\n')
 	program = getProgram(programInput)
 
 	a = 50230824
@@ -71,7 +82,7 @@ def do():
 	c = 0
 
 	print(do1(program,a,b,c))
-	print(do2(program,a,b,c))
+	print(do2(program))
 
 	print('done')
 
